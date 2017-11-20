@@ -1,3 +1,9 @@
+#include <arduino.h>
+#include <servo.hpp>
+#include <sensor.hpp>
+#include <dcmotor.hpp>
+#include <communication.hpp>
+
 void setup() {
   // put your setup code here, to run once:
 

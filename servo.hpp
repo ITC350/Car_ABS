@@ -9,7 +9,7 @@
 #ifndef servo_hpp
 #define servo_hpp
 
-#include <stdio.h>
+
 
 class servo {
 private:

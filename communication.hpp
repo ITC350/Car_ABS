@@ -9,11 +9,12 @@
 #ifndef communication_hpp
 #define communication_hpp
 
-#include <stdio.h>
+
 
 class communication {
 private:
 public:
+    
     communication();
     ~communication();
 protected:

@@ -9,7 +9,7 @@
 #ifndef sensor_hpp
 #define sensor_hpp
 
-#include <stdio.h>
+
 
 class sensor {
 private:

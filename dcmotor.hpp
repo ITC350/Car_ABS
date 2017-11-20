@@ -9,7 +9,7 @@
 #ifndef dcmotor_hpp
 #define dcmotor_hpp
 
-#include <stdio.h>
+
 
 class dcmotor {
 private:
