@@ -5,7 +5,7 @@
 //  Created by <author> on 18/11/2017.
 //
 //
-
+#include <Arduino.h>
 #ifndef servo_hpp
 #define servo_hpp
 
