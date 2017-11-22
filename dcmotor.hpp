@@ -21,6 +21,7 @@ public:
     ~dcmotor();
     void Forward();
     void Backward();
+    void Accelerator();
 protected:
 
 };
