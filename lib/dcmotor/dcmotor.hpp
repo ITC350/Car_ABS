@@ -5,26 +5,27 @@
 //  Created by <author> on 18/11/2017.
 //
 //
-
-#ifndef dcmotor_hpp
-#define dcmotor_hpp
-
+#pragma once
+//#ifndef dcmotor_hpp
+//#define dcmotor_hpp
+#include <Arduino.h>
+//#include <stdint.h>
 
 
 class dcmotor {
 private:
-  const int dc_has=10;
-  const int dc_ret1=11;
-  const int dc_ret2=12;
+  const uint8_t m_has_pin=10;
+  const uint8_t m_reta_pin=11;
+  const uint8_t m_retb_pin=12;
 public:
     dcmotor();
     ~dcmotor();
-    void Forward();
-    void Backward();
+    void Forward(uint8_t fwd_speed);
+    void Backward(uint8_t bwd_speed);
     void Accelerator();
 protected:
 
 };
 
 
-#endif /* dcmotor_hpp */
+//#endif /* dcmotor_hpp */

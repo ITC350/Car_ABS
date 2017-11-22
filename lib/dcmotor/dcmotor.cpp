@@ -5,26 +5,25 @@
 //  Created by <author> on 18/11/2017.
 //
 //
-#include <Aduino.h>
+
 #include "dcmotor.hpp"
+//#include <stdint.h>
 
 dcmotor::dcmotor()  {
-  pinMode(dc_has, OUTPUT);
-  pinMode(dc_ret1, OUTPUT);
-  pinMode(dc_ret2, OUTPUT);
+  pinMode(m_has_pin, OUTPUT);
+  pinMode(m_reta_pin, OUTPUT);
+  pinMode(m_retb_pin, OUTPUT);
 }
 dcmotor::~dcmotor() {}
 
-void Forward(){
-  analogWrite(dc_has, 35);
-  digitalWrite(dc_ret1,HIGH);
-  digitalWrite(dc_ret2,LOW);
-  delay(1000);
+void dcmotor::Forward(uint8_t fwd_speed){
+  analogWrite(m_has_pin, fwd_speed);
+  digitalWrite(m_reta_pin,HIGH);
+  digitalWrite(m_retb_pin,LOW);
 }
 
-void Backward(){
-  analogWrite(dc_has, 35);
-   digitalWrite(dc_ret1,LOW);
-   digitalWrite(dc_ret2,HIGH);
-   delay(1000);
+void dcmotor::Backward(uint8_t bwd_speed){
+  analogWrite(m_has_pin, bwd_speed);
+   digitalWrite(m_reta_pin,LOW);
+   digitalWrite(m_retb_pin,HIGH);
 }
