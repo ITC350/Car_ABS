@@ -18,7 +18,19 @@ communication::~communication()
     serial.end();
 }
 
-uint8_t *communication::receive()
+uint8_t *communication::receive_cmds()
 {
-    serial.read();
+    for (size_t i = 0; i < 16; i++)
+    {
+        if(serial.available())
+        {
+            rec_msg[i] = serial.read();
+        }
+    }
+    return rec_msg;
+}
+
+bool is_halt()
+{
+    return serial.read() == HALT;
 }

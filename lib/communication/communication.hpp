@@ -9,6 +9,7 @@
 #pragma once
 
 #include <Arduino.h>
+#include "opcode.hpp"
 
 class communication {
 private:
@@ -19,8 +20,9 @@ private:
 public:
     communication(HardwareSerial& serial);
     ~communication();
-    uint8_t *receive();
+    uint8_t *receive_cmds();
     void send(uint8_t msg[32]);
+    bool is_halt();
 
 protected:
 
