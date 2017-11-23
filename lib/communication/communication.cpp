@@ -8,5 +8,17 @@
 
 #include "communication.hpp"
 
-communication::communication()  {}
-communication::~communication() {}
+communication::communication()
+  : m_serial(serial)
+{
+    serial.begin(baud_rate);
+}
+communication::~communication()
+{
+    serial.end();
+}
+
+uint8_t *communication::receive()
+{
+    serial.read();
+}
