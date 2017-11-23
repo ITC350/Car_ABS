@@ -38,3 +38,7 @@
 =======
 .vscode/c_cpp_properties.json
 >>>>>>> PlatformIO
+
+\.travis\.yml
+
+platformio\.ini
