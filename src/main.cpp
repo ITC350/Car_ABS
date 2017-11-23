@@ -3,6 +3,7 @@
 #include "sensor.hpp"
 #include "dcmotor.hpp"
 #include "communication.hpp"
+#include "scheduler.hpp"
 
 void setup() {
   // put your setup code here, to run once:
