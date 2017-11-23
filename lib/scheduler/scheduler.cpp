@@ -1,13 +1,16 @@
 #include "scheduler.hpp"
 
-scheduler::scheduler(communication comm)
-    : m_comm(comm)
+scheduler::scheduler(communication& comm, dcmotor& motor, servo& servo, sensor sensors[4])
+    : m_comm(comm), m_motor(motor), m_servo(servo)
 {
-    
+    for (uint8_t i = 0; i < 4; ++i) {
+        m_sensors[i] = sensors[4];
+    }
 }
 
-void scheduler::start(uint8_t commands[16])
+void scheduler::start_test()
 {
+    uint8_t *commands = m_comm.receive();
     uint8_t iter = 0;
 
     while (iter < 16)

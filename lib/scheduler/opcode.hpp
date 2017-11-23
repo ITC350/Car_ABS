@@ -7,5 +7,6 @@ typedef enum opcode_e {
     FORWARD     = 0x03,
     BACKWARD    = 0x04,
     TURN        = 0x05,
+    DISABLE_ABS = 0x06,
     HALT        = 0xFF
 } opcode_t;
