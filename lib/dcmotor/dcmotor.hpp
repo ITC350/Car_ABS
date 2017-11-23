@@ -22,7 +22,7 @@ public:
     ~dcmotor();
     void Forward(uint8_t fwd_speed);
     void Backward(uint8_t bwd_speed);
-    void Accelerator();
+    void Accelerator(uint8_t acc_to_spd);
 protected:
 
 };
