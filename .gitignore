@@ -42,3 +42,5 @@
 \.travis\.yml
 
 platformio\.ini
+.pioenvs
+.piolibdeps
