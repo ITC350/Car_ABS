@@ -28,6 +28,17 @@ void dcmotor::Backward(uint8_t bwd_speed){
    digitalWrite(m_retb_pin,HIGH);
 }
 
-void dcmotor::Accelerator(uint8_t acc_to_spd){
-    
+void dcmotor::Accelerator(uint8_t acc_to_spd, uint16_t acc_const){
+    uint8_t pwm = 1;
+    Forward(pwm);
+    uint32_t cur_time = 0;
+    while(pwm < 255){
+        if(millis() - cur_time >= acc_const){
+            ++pwm;
+            Forward(pwm);
+        }
+        if (sensor.input1 = acc_to_spd//-something) {
+            //break or return;
+        }
+    }
 }
