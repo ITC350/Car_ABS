@@ -88,7 +88,7 @@ void dcmotor::pid(){
   }
 }
 
-void dcmotor::Accelerator(uint8_t acc_to_spd, uint16_t acc_const){
+void dcmotor::Accelerator(){
     uint8_t pwm = 1;
     Forward(pwm);
     uint32_t cur_time = 0;
@@ -103,7 +103,7 @@ void dcmotor::Accelerator(uint8_t acc_to_spd, uint16_t acc_const){
           dataArr[dataArrItt] = m_sensors[1].average();
           ++dataArrItt;
         }
-        if (m_sensors[1].average() == (acc_to_spd*3)/4) {
+        if (m_sensors[1].average() == (trgt_spd*3)/4) {
             break;
         }
     }
