@@ -9,10 +9,14 @@
 #include "dcmotor.hpp"
 //#include <stdint.h>
 
-dcmotor::dcmotor()  {
+dcmotor::dcmotor(sensor sensors[4])  {
   pinMode(m_has_pin, OUTPUT);
   pinMode(m_reta_pin, OUTPUT);
   pinMode(m_retb_pin, OUTPUT);
+
+  for (uint8_t i = 0; i < 4; ++i) {
+      m_sensors[i] = sensors[4];
+  }
 }
 dcmotor::~dcmotor() {}
 

@@ -1,11 +1,9 @@
 #include "scheduler.hpp"
 
-scheduler::scheduler(communication& comm, dcmotor& motor, servo& servo, sensor sensors[4])
+scheduler::scheduler(communication& comm, dcmotor& motor, servo& servo)
     : m_comm(comm), m_motor(motor), m_servo(servo)
 {
-    for (uint8_t i = 0; i < 4; ++i) {
-        m_sensors[i] = sensors[4];
-    }
+
 }
 
 void scheduler::start_test()

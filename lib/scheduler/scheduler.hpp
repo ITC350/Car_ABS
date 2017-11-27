@@ -14,10 +14,10 @@ private:
     communication m_comm;
     dcmotor m_motor;
     servo m_servo;
-    sensor m_sensors[4];
+
 public:
     void start_test();
-    scheduler(communication& comm, dcmotor& motor, servo& servo, sensor sensors[4]);
+    scheduler(communication& comm, dcmotor& motor, servo& servo);
     ~scheduler();
 protected:
 
