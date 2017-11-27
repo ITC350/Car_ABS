@@ -1,15 +1,7 @@
-//
-//  communication.hpp
-//  Car_ABS
-//
-//  Created by <author> on 18/11/2017.
-//
-//
-
 #pragma once
 
 #include <Arduino.h>
-#include "opcode.hpp"
+ #include "opcode.hpp"
 
 class communication {
 private:
@@ -18,7 +10,7 @@ private:
     uint8_t rec_msg[16];
 
 public:
-    communication(HardwareSerial& serial);
+    communication(HardwareSerial serial);
     ~communication();
     uint8_t *receive_cmds();
     void send(uint8_t msg[32]);

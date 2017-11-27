@@ -1,14 +1,6 @@
-//
-//  communication.cpp
-//  Car_ABS
-//
-//  Created by <author> on 18/11/2017.
-//
-//
-
 #include "communication.hpp"
 
-communication::communication(HardwareSerial& serial)
+communication::communication(HardwareSerial serial)
   : m_serial(serial)
 {
     serial.begin(baud_rate);
