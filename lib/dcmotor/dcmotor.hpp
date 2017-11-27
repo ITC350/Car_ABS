@@ -17,7 +17,7 @@ private:
   const uint8_t m_retb_pin=12;
   PID myPID;
   double Setpoint, Input, Output;
-  double Kp=2, Ki=5, Kd=1;
+  double Kp=2, Ki=5, Kd=0;
   uint16_t dataArr[1000];
   uint16_t dataArrItt = 0;
 public:
