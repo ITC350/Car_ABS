@@ -17,6 +17,7 @@ private:
   const uint8_t m_reta_pin=11;
   const uint8_t m_retb_pin=12;
   PID myPID;
+  communication m_comm;
   uint16_t trgt_spd;
   double Input, Output;
   double Kp=2, Ki=5, Kd=0;
