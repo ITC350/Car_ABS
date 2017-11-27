@@ -23,7 +23,7 @@ dcmotor::dcmotor()  {
   attachInterrupt(digitalPinToInterrupt(19), triggerISR2, HIGH); //attach interrupt
   attachInterrupt(digitalPinToInterrupt(2), triggerISR3, HIGH); //attach interrupt
   attachInterrupt(digitalPinToInterrupt(3), triggerISR4, HIGH); //attach interrupt
-  
+
   noInterrupts();//stop interrupts
 
   //Timer5 16 bit
@@ -36,8 +36,8 @@ dcmotor::dcmotor()  {
   TCCR1B |= (0 << WGM52);   //Normal mode
 
   interrupts();//allow interrupts
-  
-  
+
+
 }
 dcmotor::~dcmotor() {}
 
@@ -59,19 +59,30 @@ void dcmotor::emStop(){
      digitalWrite(m_retb_pin,LOW);
 }
 
+void PID(){
+
+}
+
 void dcmotor::Accelerator(uint8_t acc_to_spd, uint16_t acc_const){
     uint8_t pwm = 1;
     Forward(pwm);
     uint32_t cur_time = 0;
+    uint32_t cur_time2 = 0;
     while(pwm < 255){
         if(millis() - cur_time >= acc_const){
+            cur_time=millis();
             ++pwm;
             Forward(pwm);
         }
-        if (sensor.input1 = acc_to_spd//-something) {
-            //break or return;
+        if (millis()-cur_time2>=datafreq){
+          dataArr[dataArrItt]=m_sensors[1].average;
+          ++dataArrItt;
+        }
+        if (m_sensors[1].average = (acc_to_spd*3)/4) {
+            break;
         }
     }
+    PID();
 }
 
 void triggerISR1(){

@@ -26,9 +26,12 @@ private:
   void triggerISR2();
   void triggerISR3();
   void triggerISR4();
+  uint16_t dataArr[1000];
+  uint16_t dataArrItt = 0;
 public:
     dcmotor(sensor sensors[4]);
     ~dcmotor();
+    const uint32_t datafreq = 50;
     void Forward(uint8_t fwd_speed);
     void Backward(uint8_t bwd_speed);
     void Accelerator(uint8_t acc_to_spd, uint16_t acc_const);
