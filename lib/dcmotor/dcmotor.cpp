@@ -85,15 +85,15 @@ void dcmotor::Accelerator(uint8_t acc_to_spd, uint16_t acc_const){
     PID();
 }
 
-void triggerISR1(){
+void dcmotor::triggerISR1(){
     m_sensors[0].event();
 }
-void triggerISR2(){
+void dcmotor::triggerISR2(){
     m_sensors[1].event();
 }
-void triggerISR3(){
+void dcmotor::triggerISR3(){
     m_sensors[2].event();
 }
-void triggerISR4(){
+void dcmotor::triggerISR4(){
     m_sensors[3].event();
 }
