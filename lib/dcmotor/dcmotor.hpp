@@ -17,12 +17,13 @@ private:
   const uint8_t m_reta_pin=11;
   const uint8_t m_retb_pin=12;
   PID myPID;
-  double Setpoint, Input, Output;
+  uint16_t trgt_spd;
+  double Input, Output;
   double Kp=2, Ki=5, Kd=0;
   uint16_t dataArr[1000];
   uint16_t dataArrItt = 0;
 public:
-    dcmotor(communication &comm, uint16_t acc_const, uint8_t acc_to_speed, double kp, double ki, double kd);
+    dcmotor(communication &comm, uint16_t acc_const, uint8_t trgt_spd, double kp, double ki, double kd);
     ~dcmotor();
     const uint32_t datafreq = 50;
     void Forward(uint8_t fwd_speed);

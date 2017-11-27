@@ -22,8 +22,8 @@ void triggerISR4(){
     dcmotor::m_sensors[3].event();
 }
 
-dcmotor::dcmotor(communication &comm, uint16_t acc_const, uint8_t acc_to_speed, double kp, double ki, double kd)
-    : myPID(&Input, &Output, &Setpoint, Kp, Ki, Kd, DIRECT)  {
+dcmotor::dcmotor(communication &comm, uint16_t acc_const, uint8_t trgt_spd, double kp, double ki, double kd)
+    :myPID(&Input, &Output, &trgt_spd, kp, ki, kd, DIRECT)  {
   pinMode(m_has_pin, OUTPUT);
   pinMode(m_reta_pin, OUTPUT);
   pinMode(m_retb_pin, OUTPUT);
@@ -82,6 +82,7 @@ void dcmotor::pid(){
     myPID.SetMode(AUTOMATIC);
 
     while(1){
+        if(comm.check_halt())emStop();
     Input = m_sensors[1].average();
     myPID.Compute();
     analogWrite(m_has_pin, Output);
@@ -94,6 +95,7 @@ void dcmotor::Accelerator(){
     uint32_t cur_time = 0;
     uint32_t cur_time2 = 0;
     while(pwm < 255){
+        if(comm.check_halt())emStop();
         if(millis() - cur_time >= acc_const){
             cur_time=millis();
             ++pwm;
