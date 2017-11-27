@@ -28,6 +28,12 @@ void dcmotor::Backward(uint8_t bwd_speed){
    digitalWrite(m_retb_pin,HIGH);
 }
 
+void dcmotor::emStop(){
+    analogWrite(m_has_pin, 0);
+     digitalWrite(m_reta_pin,LOW);
+     digitalWrite(m_retb_pin,LOW);
+}
+
 void dcmotor::Accelerator(uint8_t acc_to_spd, uint16_t acc_const){
     uint8_t pwm = 1;
     Forward(pwm);
