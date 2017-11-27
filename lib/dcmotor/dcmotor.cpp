@@ -9,14 +9,35 @@
 #include "dcmotor.hpp"
 //#include <stdint.h>
 
-dcmotor::dcmotor(sensor sensors[4])  {
+dcmotor::dcmotor()  {
   pinMode(m_has_pin, OUTPUT);
   pinMode(m_reta_pin, OUTPUT);
   pinMode(m_retb_pin, OUTPUT);
 
-  for (uint8_t i = 0; i < 4; ++i) {
-      m_sensors[i] = sensors[4];
-  }
+  //sensor
+  pinMode(18, INPUT);
+  pinMode(19, INPUT);
+  pinMode(2, INPUT);
+  pinMode(3, INPUT);
+  attachInterrupt(digitalPinToInterrupt(18), triggerISR1, HIGH); //attach interrupt
+  attachInterrupt(digitalPinToInterrupt(19), triggerISR2, HIGH); //attach interrupt
+  attachInterrupt(digitalPinToInterrupt(2), triggerISR3, HIGH); //attach interrupt
+  attachInterrupt(digitalPinToInterrupt(3), triggerISR4, HIGH); //attach interrupt
+  
+  noInterrupts();//stop interrupts
+
+  //Timer5 16 bit
+  //  #######################################################
+  TCCR5A = 0;               //set entire TCCR1A register to 0
+  TCCR5B = 0;               //set entire TCCR1B register to 0
+  TCNT5 = 0;                //Register for timer value
+
+  TCCR5B |= (1 << CS52) | (1 << CS50);    // prescaler
+  TCCR1B |= (0 << WGM52);   //Normal mode
+
+  interrupts();//allow interrupts
+  
+  
 }
 dcmotor::~dcmotor() {}
 
@@ -51,4 +72,17 @@ void dcmotor::Accelerator(uint8_t acc_to_spd, uint16_t acc_const){
             //break or return;
         }
     }
+}
+
+void triggerISR1(){
+    m_sensors[0].event();
+}
+void triggerISR2(){
+    m_sensors[1].event();
+}
+void triggerISR3(){
+    m_sensors[2].event();
+}
+void triggerISR4(){
+    m_sensors[3].event();
 }

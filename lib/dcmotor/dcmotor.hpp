@@ -22,6 +22,10 @@ private:
   double Kp=2, Ki=5, Kd=1;
   PID myPID(&Input, &Output, &Setpoint, Kp, Ki, Kd, DIRECT);
   sensor m_sensors[4];
+  void triggerISR1();
+  void triggerISR2();
+  void triggerISR3();
+  void triggerISR4();
 public:
     dcmotor(sensor sensors[4]);
     ~dcmotor();
