@@ -11,14 +11,21 @@
 
 
 
-class sensor {
-private:
-public:
-    sensor();
-    ~sensor();
-protected:
-
-};
+class sensor { 
+private: 
+    const int maxsize = 5; 
+    int ring_buffer[maxsize]; 
+    volatile int counter = 0; 
+    volatile uint16_t in_interval; 
+    uint16_t sum; 
+public: 
+    sensor(); 
+    ~sensor(); 
+    void event(); 
+    uint16_t average(); 
+protected: 
+ 
+}; 
 
 
 #endif /* sensor_hpp */
