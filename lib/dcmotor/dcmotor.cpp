@@ -9,7 +9,21 @@
 #include "dcmotor.hpp"
 //#include <stdint.h>
 
-dcmotor::dcmotor(); myPID(&Input, &Output, &Setpoint, Kp, Ki, Kd, DIRECT)  {
+void triggerISR1(){
+    dcmotor::m_sensors[0].event();
+}
+void triggerISR2(){
+    dcmotor::m_sensors[1].event();
+}
+void triggerISR3(){
+    dcmotor::m_sensors[2].event();
+}
+void triggerISR4(){
+    dcmotor::m_sensors[3].event();
+}
+
+dcmotor::dcmotor()
+    : myPID(&Input, &Output, &Setpoint, Kp, Ki, Kd, DIRECT)  {
   pinMode(m_has_pin, OUTPUT);
   pinMode(m_reta_pin, OUTPUT);
   pinMode(m_retb_pin, OUTPUT);
@@ -75,25 +89,12 @@ void dcmotor::Accelerator(uint8_t acc_to_spd, uint16_t acc_const){
             Forward(pwm);
         }
         if (millis()-cur_time2>=datafreq){
-          dataArr[dataArrItt]=m_sensors[1].average;
+          dataArr[dataArrItt] = m_sensors[1].average();
           ++dataArrItt;
         }
-        if (m_sensors[1].average = (acc_to_spd*3)/4) {
+        if (m_sensors[1].average() == (acc_to_spd*3)/4) {
             break;
         }
     }
     PID();
-}
-
-void dcmotor::triggerISR1(){
-    m_sensors[0].event();
-}
-void dcmotor::triggerISR2(){
-    m_sensors[1].event();
-}
-void dcmotor::triggerISR3(){
-    m_sensors[2].event();
-}
-void dcmotor::triggerISR4(){
-    m_sensors[3].event();
 }

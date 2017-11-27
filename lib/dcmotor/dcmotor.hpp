@@ -8,7 +8,7 @@
 #include <Arduino.h>
 //#include <stdint.h>
 #include <PID_v1.h>
-#include <sensor.hpp>
+#include "sensor.hpp"
 
 class dcmotor {
 private:
@@ -16,13 +16,8 @@ private:
   const uint8_t m_reta_pin=11;
   const uint8_t m_retb_pin=12;
   PID myPID;
-  sensor m_sensors[4];
   double Setpoint, Input, Output;
   double Kp=2, Ki=5, Kd=1;
-  void triggerISR1();
-  void triggerISR2();
-  void triggerISR3();
-  void triggerISR4();
   uint16_t dataArr[1000];
   uint16_t dataArrItt = 0;
 public:
@@ -33,8 +28,7 @@ public:
     void Backward(uint8_t bwd_speed);
     void Accelerator(uint8_t acc_to_spd, uint16_t acc_const);
     void emStop();
-protected:
-
+    static sensor m_sensors[4];
 };
 
 

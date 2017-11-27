@@ -8,7 +8,7 @@ scheduler::scheduler(communication& comm, dcmotor& motor, servo& servo)
 
 void scheduler::check_emergency_brake()
 {
-    if (m_comm.is_halt) {
-        m_motor.emBrake();
+    if (m_comm.check_halt()) {
+        m_motor.emStop();
     }
 }

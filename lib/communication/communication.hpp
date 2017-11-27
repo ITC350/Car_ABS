@@ -3,7 +3,7 @@
 #include <Arduino.h>
 #include "opcode.hpp"
 
-#define DEFAULT_RECV_SIZE 16
+#define DEFAULT_RECV_SIZE 32
 
 class communication {
 private:

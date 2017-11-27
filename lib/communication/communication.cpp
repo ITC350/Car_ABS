@@ -22,10 +22,10 @@ double communication::recv_double()
 {
     uint32_t d = 0;
 
-    d += recv_single_byte() << 32;
-    d += recv_single_byte() << 24;
-    d += recv_single_byte() << 16;
-    d += recv_single_byte() << 8;
+    d += recv_single_byte() << 0x20;
+    d += recv_single_byte() << 0x18;
+    d += recv_single_byte() << 0x10;
+    d += recv_single_byte() << 0x08;
 
     return (double)d;
 }
@@ -55,8 +55,8 @@ uint32_t *communication::receive()
             case DISABLE_ABS:
                 recv_msg[i] = DISABLE_ABS;
                 break;
-            case PID:
-                recv_msg[i] = PID;
+            case EPID:
+                recv_msg[i] = EPID;
                 recv_msg[++i] = recv_double();
                 recv_msg[++i] = recv_double();
                 recv_msg[++i] = recv_double();
