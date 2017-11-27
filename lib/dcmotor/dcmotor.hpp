@@ -1,10 +1,7 @@
-//
 //  dcmotor.hpp
 //  Car_ABS
-//
 //  Created by <author> on 18/11/2017.
-//
-//
+
 #pragma once
 //#ifndef dcmotor_hpp
 //#define dcmotor_hpp
@@ -18,10 +15,10 @@ private:
   const uint8_t m_has_pin=10;
   const uint8_t m_reta_pin=11;
   const uint8_t m_retb_pin=12;
+  PID myPID;
+  sensor m_sensors[4];
   double Setpoint, Input, Output;
   double Kp=2, Ki=5, Kd=1;
-  PID myPID(&Input, &Output, &Setpoint, Kp, Ki, Kd, DIRECT);
-  sensor m_sensors[4];
   void triggerISR1();
   void triggerISR2();
   void triggerISR3();
@@ -29,7 +26,7 @@ private:
   uint16_t dataArr[1000];
   uint16_t dataArrItt = 0;
 public:
-    dcmotor(sensor sensors[4]);
+    dcmotor();
     ~dcmotor();
     const uint32_t datafreq = 50;
     void Forward(uint8_t fwd_speed);

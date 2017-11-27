@@ -9,7 +9,7 @@
 #include "dcmotor.hpp"
 //#include <stdint.h>
 
-dcmotor::dcmotor()  {
+dcmotor::dcmotor(); myPID(&Input, &Output, &Setpoint, Kp, Ki, Kd, DIRECT)  {
   pinMode(m_has_pin, OUTPUT);
   pinMode(m_reta_pin, OUTPUT);
   pinMode(m_retb_pin, OUTPUT);
