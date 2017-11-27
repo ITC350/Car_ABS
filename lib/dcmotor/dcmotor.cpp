@@ -22,7 +22,7 @@ void triggerISR4(){
     dcmotor::m_sensors[3].event();
 }
 
-dcmotor::dcmotor()
+dcmotor::dcmotor(communication &comm, uint16_t acc_const, uint8_t acc_to_speed, double kp, double ki, double kd)
     : myPID(&Input, &Output, &Setpoint, Kp, Ki, Kd, DIRECT)  {
   pinMode(m_has_pin, OUTPUT);
   pinMode(m_reta_pin, OUTPUT);
