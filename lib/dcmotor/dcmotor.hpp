@@ -35,6 +35,7 @@ public:
     void Forward(uint8_t fwd_speed);
     void Backward(uint8_t bwd_speed);
     void Accelerator(uint8_t acc_to_spd, uint16_t acc_const);
+    void emStop();
 protected:
 
 };
