@@ -1,4 +1,4 @@
-dcmotor:://
+//
 //  dcmotor.cpp
 //  Car_ABS
 //
