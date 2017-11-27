@@ -73,16 +73,16 @@ void dcmotor::emStop(){
      digitalWrite(m_retb_pin,LOW);
 }
 
-void PID(){
+void dcmotor::pid(){
 
     //initialize the variables we're linked to
-    Input = m_sensor[1].average();
+    Input = m_sensors[1].average();
 
     //turn the PID on
     myPID.SetMode(AUTOMATIC);
 
-    while(?){
-    Input = m_sensor[1].average();
+    while(1){
+    Input = m_sensors[1].average();
     myPID.Compute();
     analogWrite(m_has_pin, Output);
   }
@@ -107,5 +107,5 @@ void dcmotor::Accelerator(uint8_t acc_to_spd, uint16_t acc_const){
             break;
         }
     }
-    PID();
+    pid();
 }

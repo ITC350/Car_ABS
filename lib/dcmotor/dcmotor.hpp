@@ -29,6 +29,7 @@ public:
     void Accelerator(uint8_t acc_to_spd, uint16_t acc_const);
     void emStop();
     static sensor m_sensors[4];
+    void pid();
 };
 
 
