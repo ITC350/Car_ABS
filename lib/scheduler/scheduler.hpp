@@ -2,7 +2,6 @@
 
 #include <Arduino.h>
 
-#include "opcode.hpp"
 #include "communication.hpp"
 #include "dcmotor.hpp"
 #include "servo.hpp"
@@ -16,9 +15,9 @@ private:
     servo m_servo;
 
 public:
-    void start_test();
     scheduler(communication& comm, dcmotor& motor, servo& servo);
     ~scheduler();
+    void check_emergency_brake();
 protected:
 
 };

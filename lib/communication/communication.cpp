@@ -10,19 +10,65 @@ communication::~communication()
     m_serial.end();
 }
 
-uint8_t *communication::receive_cmds()
+uint8_t communication::recv_single_byte()
 {
-    for (size_t i = 0; i < 16; i++)
+    if (m_serial.available())
     {
-        if(m_serial.available())
-        {
-            rec_msg[i] = m_serial.read();
-        }
+        return m_serial.read();
     }
-    return rec_msg;
 }
 
-bool communication::is_halt()
+double communication::recv_double()
+{
+    uint32_t d = 0;
+
+    d += recv_single_byte() << 32;
+    d += recv_single_byte() << 24;
+    d += recv_single_byte() << 16;
+    d += recv_single_byte() << 8;
+
+    return (double)d;
+}
+
+uint32_t *communication::receive()
+{
+    uint32_t op = 0;
+
+    for (size_t i = 0; i < DEFAULT_RECV_SIZE; i++)
+    {
+        op = recv_single_byte();
+        
+        switch (op) {
+            case NOP:
+                recv_msg[i] = NOP;
+                break;
+            case START:
+                recv_msg[i] = START;
+                break;
+            case HALT:
+                recv_msg[0] = HALT;
+                return recv_msg;
+            case ACCELERATE:
+                recv_msg[i] = ACCELERATE;
+                recv_msg[++i] = recv_single_byte();
+                break;
+            case DISABLE_ABS:
+                recv_msg[i] = DISABLE_ABS;
+                break;
+            case PID:
+                recv_msg[i] = PID;
+                recv_msg[++i] = recv_double();
+                recv_msg[++i] = recv_double();
+                recv_msg[++i] = recv_double();
+                break;
+            default:
+                return NULL;
+        }
+    }
+    return recv_msg;
+}
+
+bool communication::check_halt()
 {
     return m_serial.read() == HALT;
 }

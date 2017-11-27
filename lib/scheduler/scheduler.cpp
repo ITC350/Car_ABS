@@ -6,35 +6,9 @@ scheduler::scheduler(communication& comm, dcmotor& motor, servo& servo)
 
 }
 
-void scheduler::start_test()
+void scheduler::check_emergency_brake()
 {
-    uint8_t *commands = m_comm.receive();
-    uint8_t iter = 0;
-
-    while (iter < 16)
-    {
-        switch (commands[iter])
-        {
-            case HALT:
-                break;
-            case NOP:
-                iter++;
-                break;
-            case START:
-                iter += 2;
-                break;
-            case BRAKE:
-                iter += 2;
-                break;
-            case FORWARD:
-                iter += 2;
-                break;
-            case BACKWARD:
-                iter += 2;
-                break;
-            case TURN:
-                iter += 2;
-                break;
-        }
+    if (m_comm.is_halt) {
+        m_motor.emBrake();
     }
 }
