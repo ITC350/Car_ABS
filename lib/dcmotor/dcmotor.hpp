@@ -17,14 +17,14 @@ private:
   const uint8_t m_has_pin=10;
   const uint8_t m_reta_pin=11;
   const uint8_t m_retb_pin=12;
-  PID myPID;
+
   communication m_comm;
-  double trgt_spd;
-  double Input, Output;
-  double Kp=2, Ki=5, Kd=0;
+  double Input, Output, trgt_spd;
+  //double Kp=2, Ki=0, Kd=0;
+  PID myPID;
   uint16_t m_acc_const;
-  uint16_t dataArrItt = 0;
-  uint16_t m_datafreq = 50;
+  uint16_t m_datafreq;
+
 public:
     dcmotor(communication &comm, uint16_t acc_const, uint16_t datafreq, double trgt_spd, double kp, double ki, double kd);
     ~dcmotor();
@@ -34,7 +34,8 @@ public:
     void emStop();
     void pid();
     void ABS();
-    uint16_t dataArr[1024];
+    uint16_t dataArr[1024] = {0};
+    uint16_t dataArrItt = 0;
 };
 
 
