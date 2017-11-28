@@ -2,13 +2,13 @@
 
 #include <Arduino.h>
 
-class sensor { 
+class sensor {
 private:
     volatile int counter = 0;
     volatile int temp_counter = 0;
-public: 
-    sensor() {sum = 0;}
-    ~sensor() {}
+public:
+    sensor();
+    ~sensor();
     void event();
     uint16_t average();
 };
