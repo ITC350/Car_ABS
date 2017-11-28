@@ -1,4 +1,3 @@
-#include <Arduino.h>
 #include "servo.hpp"
 #include "sensor.hpp"
 #include "dcmotor.hpp"
