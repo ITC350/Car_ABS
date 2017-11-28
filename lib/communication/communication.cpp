@@ -18,19 +18,19 @@ uint8_t communication::recv_single_byte()
     }
 }
 
-double communication::recv_double()
+uint32_t communication::recv_quad()
 {
-    uint32_t d = 0;
+    uint32_t q = 0;
 
-    d += recv_single_byte() << 0x20;
-    d += recv_single_byte() << 0x18;
-    d += recv_single_byte() << 0x10;
-    d += recv_single_byte() << 0x08;
+    q += recv_single_byte() << 0x20;
+    q += recv_single_byte() << 0x18;
+    q += recv_single_byte() << 0x10;
+    q += recv_single_byte() << 0x08;
 
-    return (double)d;
+    return q;
 }
 
-uint32_t *communication::receive()
+void communication::receive()
 {
     uint32_t op = 0;
 
@@ -45,30 +45,31 @@ uint32_t *communication::receive()
             case START:
                 recv_msg[i] = START;
                 break;
-            case HALT:
-                recv_msg[0] = HALT;
-                return recv_msg;
-            case ACCELERATE:
-                recv_msg[i] = ACCELERATE;
-                recv_msg[++i] = recv_single_byte();
-                break;
             case DISABLE_ABS:
                 recv_msg[i] = DISABLE_ABS;
                 break;
-            case EPID:
-                recv_msg[i] = EPID;
-                recv_msg[++i] = recv_double();
-                recv_msg[++i] = recv_double();
-                recv_msg[++i] = recv_double();
+            case SETTINGS:
+                recv_msg[i] = SETTINGS;
+                recv_msg[++i] = recv_quad();
+                recv_msg[++i] = recv_quad();
+                recv_msg[++i] = recv_quad();
+                recv_msg[++i] = recv_quad();
+                recv_msg[++i] = recv_quad();
+                recv_msg[++i] = recv_quad();
                 break;
             default:
-                return NULL;
+                return;
         }
     }
-    return recv_msg;
+    return;
 }
 
 bool communication::check_halt()
 {
     return m_serial.read() == HALT;
+}
+
+void communication::send(uint16_t msg[1024], size_t length)
+{
+    m_serial.write((uint8_t *)msg, length * 2);
 }

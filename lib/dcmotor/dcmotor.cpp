@@ -9,17 +9,19 @@
 #include "dcmotor.hpp"
 //#include <stdint.h>
 
+sensor m_sensors[4];
+
 void triggerISR1(){
-    dcmotor::m_sensors[0].event();
+    m_sensors[0].event();
 }
 void triggerISR2(){
-    dcmotor::m_sensors[1].event();
+    m_sensors[1].event();
 }
 void triggerISR3(){
-    dcmotor::m_sensors[2].event();
+    m_sensors[2].event();
 }
 void triggerISR4(){
-    dcmotor::m_sensors[3].event();
+    m_sensors[3].event();
 }
 ISR(TIMER1_COMPA_vect) { //timer1 interrupt
     m_sensors[0].average()
@@ -29,9 +31,11 @@ ISR(TIMER1_COMPA_vect) { //timer1 interrupt
 }
 
 
-dcmotor::dcmotor(communication &comm, uint16_t acc_const, uint8_t trgt_spd, double kp, double ki, double kd)
-    :m_comm(comm),
-    myPID(&Input, &Output, &trgt_spd, kp, ki, kd, DIRECT)  {
+dcmotor::dcmotor(communication &comm, uint16_t acc_const, uint16_t datafreq, double trgt_spd, double kp, double ki, double kd):
+    m_comm(comm),
+    myPID(&Input, &Output, &trgt_spd, kp, ki, kd, DIRECT),
+    m_datafreq(datafreq),
+    m_acc_const(acc_const)  {
   pinMode(m_has_pin, OUTPUT);
   pinMode(m_reta_pin, OUTPUT);
   pinMode(m_retb_pin, OUTPUT);
@@ -83,18 +87,23 @@ void dcmotor::emStop(){
 }
 
 void dcmotor::pid(){
-
+    uint32_t cur_time2 = 0;
     //initialize the variables we're linked to
     Input = m_sensors[1].average();
 
     //turn the PID on
     myPID.SetMode(AUTOMATIC);
 
-    while(1){
+    while(cur_time2 <= MAXRUNTIME){
         if(m_comm.check_halt())emStop();
     Input = m_sensors[1].average();
     myPID.Compute();
     analogWrite(m_has_pin, Output);
+    if (millis()-cur_time2>=m_datafreq){
+      cur_time2=millis();
+      dataArr[dataArrItt] = m_sensors[1].average();
+      ++dataArrItt;
+    }
   }
 }
 
@@ -105,18 +114,18 @@ void dcmotor::Accelerator(){
     uint32_t cur_time2 = 0;
     while(pwm < 255){
         if(m_comm.check_halt())emStop();
-        if(millis() - cur_time >= acc_const){
+        if(millis() - cur_time >= m_acc_const){
             cur_time=millis();
             ++pwm;
             Forward(pwm);
         }
-        if (millis()-cur_time2>=datafreq){
+        if (millis() - cur_time2 >= m_datafreq){
+          cur_time2 = millis();
           dataArr[dataArrItt] = m_sensors[1].average();
           ++dataArrItt;
         }
         if (m_sensors[1].average() == (trgt_spd*3)/4) {
-            break;
+            return;
         }
     }
-    pid();
 }
