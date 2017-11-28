@@ -30,7 +30,7 @@ double communication::recv_double()
     return (double)d;
 }
 
-uint32_t *communication::receive()
+void communication::receive()
 {
     uint32_t op = 0;
 
@@ -45,9 +45,6 @@ uint32_t *communication::receive()
             case START:
                 recv_msg[i] = START;
                 break;
-            case HALT:
-                recv_msg[0] = HALT;
-                return recv_msg;
             case ACCELERATE:
                 recv_msg[i] = ACCELERATE;
                 recv_msg[++i] = recv_single_byte();
