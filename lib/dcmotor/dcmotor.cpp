@@ -23,13 +23,6 @@ void triggerISR3(){
 void triggerISR4(){
     m_sensors[3].event();
 }
-//Timer interrrput
-ISR(TIMER1_COMPA_vect) { //timer1 interrupt
-  m_sensors[0].average();
-  m_sensors[1].average();
-  m_sensors[2].average();
-  m_sensors[3].average();
-}
 
 
 dcmotor::dcmotor(communication &comm, uint16_t acc_const, uint16_t datafreq, double trgt_spd, double kp, double ki, double kd):
@@ -87,22 +80,22 @@ void dcmotor::emStop(){
 void dcmotor::pid(){
     uint32_t cur_time2 = 0;
     //initialize the variables we're linked to
-    Input = m_sensors[1].average();
+    Input = m_sensors[1].getvalue();
 
     //turn the PID on
     myPID.SetMode(AUTOMATIC);
 
     while(cur_time2 <= MAXRUNTIME){
-        if(m_comm.check_halt())emStop();
-    Input = m_sensors[1].average();
+        //if(m_comm.check_halt())emStop();
+    Input = m_sensors[1].getvalue();
     myPID.Compute();
     analogWrite(m_has_pin, Output);
         if (millis() - cur_time2 >= m_datafreq){
             cur_time2 = millis();
-            dataArr[dataArrItt] = m_sensors[1].average();
+            dataArr[dataArrItt] = m_sensors[1].getvalue();
             ++dataArrItt;
         }
-    Serial.println(m_sensors[1].average());
+    Serial.println(m_sensors[2].getvalue());
     }
     emStop();
 }
@@ -113,7 +106,7 @@ void dcmotor::Accelerator(){
     uint32_t cur_time = 0;
     uint32_t cur_time2 = 0;
     while(pwm < 255){
-        if(m_comm.check_halt())emStop();
+        //if(m_comm.check_halt())emStop();
         if(millis() - cur_time >= m_acc_const){
             cur_time=millis();
             ++pwm;
@@ -121,12 +114,12 @@ void dcmotor::Accelerator(){
         }
         if (millis() - cur_time2 >= m_datafreq){
           cur_time2 = millis();
-          dataArr[dataArrItt] = m_sensors[1].average();
+          dataArr[dataArrItt] = m_sensors[1].getvalue();
           ++dataArrItt;
         }
-        if (m_sensors[1].average() == (trgt_spd*3)/4) {
+        if (m_sensors[1].getvalue() == (trgt_spd*3)/4) {
             return;
         }
-        Serial.println(m_sensors[1].average());
+        Serial.print(m_sensors[2].getvalue());
     }
 }

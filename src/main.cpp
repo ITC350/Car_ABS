@@ -7,7 +7,7 @@
 
 void setup() {
   double Kp = 0.2, Ki = 0, Kd = 0;
-  double target_speed = 10;
+  double target_speed = 5;
   uint32_t acc_const = 20;
   uint32_t data_freq = 50;
   bool disable_abs = true;
