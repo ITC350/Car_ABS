@@ -35,6 +35,7 @@ void setup() {
           motor.Accelerator();
           motor.pid();
           motor.ABS();
+          comm.send(motor.dataArr);
         }
         break;
       default:
