@@ -3,6 +3,7 @@
 //  Created by <author> on 18/11/2017.
 
 #pragma once
+#define MAXRUNTIME 15000
 //#ifndef dcmotor_hpp
 //#define dcmotor_hpp
 #include <Arduino.h>
@@ -21,12 +22,11 @@ private:
   double trgt_spd;
   double Input, Output;
   double Kp=2, Ki=5, Kd=0;
-  uint16_t acc_const;
-  uint16_t dataArr[1000];
+  uint16_t m_acc_const;
   uint16_t dataArrItt = 0;
-  uint32_t datafreq = 50;
+  uint16_t m_datafreq = 50;
 public:
-    dcmotor(communication &comm, uint16_t acc_const, double trgt_spd, double kp, double ki, double kd);
+    dcmotor(communication &comm, uint16_t acc_const, uint16_t datafreq, double trgt_spd, double kp, double ki, double kd);
     ~dcmotor();
     void Forward(uint8_t fwd_speed);
     void Backward(uint8_t bwd_speed);
@@ -34,6 +34,7 @@ public:
     void emStop();
     void pid();
     void ABS();
+    uint16_t dataArr[1024];
 };
 
 
