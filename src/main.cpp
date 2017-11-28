@@ -31,7 +31,7 @@ void setup() {
         disable_abs = false;
         break;
       case START: {
-          dcmotor motor(comm, acc_const, target_speed, Kp, Ki, Kd);
+          dcmotor motor(comm, acc_const, data_freq, target_speed, Kp, Ki, Kd);
           motor.Accelerator();
           motor.pid();
           motor.ABS();
