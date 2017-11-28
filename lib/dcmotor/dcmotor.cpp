@@ -9,17 +9,19 @@
 #include "dcmotor.hpp"
 //#include <stdint.h>
 
+sensor m_sensors[4];
+
 void triggerISR1(){
-    dcmotor::m_sensors[0].event();
+    m_sensors[0].event();
 }
 void triggerISR2(){
-    dcmotor::m_sensors[1].event();
+    m_sensors[1].event();
 }
 void triggerISR3(){
-    dcmotor::m_sensors[2].event();
+    m_sensors[2].event();
 }
 void triggerISR4(){
-    dcmotor::m_sensors[3].event();
+    m_sensors[3].event();
 }
 
 dcmotor::dcmotor(communication &comm, uint16_t acc_const, double trgt_spd, double kp, double ki, double kd)

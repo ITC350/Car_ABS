@@ -32,8 +32,8 @@ public:
     void Backward(uint8_t bwd_speed);
     void Accelerator();
     void emStop();
-    static sensor m_sensors[4];
     void pid();
+    void ABS();
 };
 
 

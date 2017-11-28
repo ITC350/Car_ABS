@@ -33,6 +33,7 @@ void setup() {
           dcmotor motor(comm, acc_const, target_speed, Kp, Ki, Kd);
           motor.Accelerator();
           motor.pid();
+          motor.ABS();
         }
         break;
       default:
