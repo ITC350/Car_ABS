@@ -6,16 +6,16 @@
 
 
 void setup() {
-  double Kp = 0, Ki = 0, Kd = 0;
-  double target_speed = 0;
-  uint32_t acc_const = 0;
-  uint32_t data_freq = 0;
+  double Kp = 0.2, Ki = 0, Kd = 0;
+  double target_speed = 10;
+  uint32_t acc_const = 20;
+  uint32_t data_freq = 50;
   bool disable_abs = true;
 
   communication comm(Serial);
-  comm.receive();
+  //comm.receive();
 
-  for (uint8_t i = 0; i < DEFAULT_RECV_SIZE; i++) {
+  /*for (uint8_t i = 0; i < DEFAULT_RECV_SIZE; i++) {
     switch (comm.recv_msg[i]) {
       case NOP:
         break;
@@ -41,7 +41,10 @@ void setup() {
       default:
         return;
     }
-  }
+}*/
+dcmotor motor(comm, acc_const, data_freq, target_speed, Kp, Ki, Kd);
+motor.Accelerator();
+motor.pid();
 }
 
 void loop() {
