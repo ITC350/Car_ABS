@@ -24,8 +24,8 @@ void triggerISR4(){
     m_sensors[3].event();
 }
 
-dcmotor::dcmotor(communication &comm, uint16_t acc_const, uint16_t datafreq, double trgt_spd, double kp, double ki, double kd)
-    :m_comm(comm),
+dcmotor::dcmotor(communication &comm, uint16_t acc_const, uint16_t datafreq, double trgt_spd, double kp, double ki, double kd):
+    m_comm(comm),
     myPID(&Input, &Output, &trgt_spd, kp, ki, kd, DIRECT),
     m_datafreq(datafreq),
     m_acc_const(acc_const)  {
