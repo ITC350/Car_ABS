@@ -22,7 +22,7 @@ void triggerISR4(){
     dcmotor::m_sensors[3].event();
 }
 
-dcmotor::dcmotor(communication &comm, uint16_t acc_const, uint8_t trgt_spd, double kp, double ki, double kd)
+dcmotor::dcmotor(communication &comm, uint16_t acc_const, double trgt_spd, double kp, double ki, double kd)
     :m_comm(comm),
     myPID(&Input, &Output, &trgt_spd, kp, ki, kd, DIRECT)  {
   pinMode(m_has_pin, OUTPUT);
@@ -103,12 +103,12 @@ void dcmotor::Accelerator(){
             Forward(pwm);
         }
         if (millis()-cur_time2>=datafreq){
+          cur_time2=millis();
           dataArr[dataArrItt] = m_sensors[1].average();
           ++dataArrItt;
         }
         if (m_sensors[1].average() == (trgt_spd*3)/4) {
-            break;
+            return;
         }
     }
-    pid();
 }
