@@ -12,7 +12,7 @@ void setup() {
   uint32_t data_freq = 0;
   bool disable_abs = true;
 
-  communication comm(Serial1);
+  communication comm(Serial);
   comm.receive();
 
   for (uint8_t i = 0; i < DEFAULT_RECV_SIZE; i++) {
@@ -20,12 +20,12 @@ void setup() {
       case NOP:
         break;
       case SETTINGS:
-        Kp = (double)comm.recv_msg[++i];
-        Ki = (double)comm.recv_msg[++i];
-        Kd = (double)comm.recv_msg[++i];
-        target_speed = (double)comm.recv_msg[++i];
-        acc_const = comm.recv_msg[++i];
-        data_freq = comm.recv_msg[++i];
+        Kp = comm.recv_msg[++i] * 1.0; // 2
+        Ki = comm.recv_msg[++i] * 1.0; // 0
+        Kd = comm.recv_msg[++i] * 1.0; // 0
+        target_speed = comm.recv_msg[++i] * 1.0; // 500
+        acc_const = comm.recv_msg[++i]; // 50
+        data_freq = comm.recv_msg[++i]; // 50
         break;
       case DISABLE_ABS:
         disable_abs = false;
