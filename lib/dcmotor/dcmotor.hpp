@@ -23,7 +23,7 @@ private:
   double Input, Output;
   double Kp=2, Ki=5, Kd=0;
   uint16_t m_acc_const;
-  uint16_t dataArrItt = 0;
+
   uint16_t m_datafreq = 50;
 public:
     dcmotor(communication &comm, uint16_t acc_const, uint16_t datafreq, double trgt_spd, double kp, double ki, double kd);
@@ -35,6 +35,7 @@ public:
     void pid();
     void ABS();
     uint16_t dataArr[1024];
+    uint16_t dataArrItt = 0;
 };
 
 
