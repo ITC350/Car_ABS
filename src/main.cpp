@@ -1,4 +1,3 @@
-#include <Arduino.h>
 #include "servo.hpp"
 #include "sensor.hpp"
 #include "dcmotor.hpp"
@@ -6,16 +5,16 @@
 
 
 void setup() {
-  double Kp = 0.2, Ki = 0, Kd = 0;
-  double target_speed = 15;
-  uint32_t acc_const = 100;
-  uint32_t data_freq = 50;
+  double Kp = 0, Ki = 0, Kd = 0;
+  double target_speed = 0;
+  uint32_t acc_const = 0;
+  uint32_t data_freq = 0;
   bool disable_abs = true;
-  delay(2000);
-  communication comm(Serial);
-  //comm.receive();
 
-  /*for (uint8_t i = 0; i < DEFAULT_RECV_SIZE; i++) {
+  communication comm(Serial);
+  comm.receive();
+
+  for (uint8_t i = 0; i < DEFAULT_RECV_SIZE; i++) {
     switch (comm.recv_msg[i]) {
       case NOP:
         break;
@@ -41,10 +40,7 @@ void setup() {
       default:
         return;
     }
-}*/
-dcmotor motor(comm, acc_const, data_freq, target_speed, Kp, Ki, Kd);
-motor.Accelerator();
-motor.pid();
+  }
 }
 
 void loop() {
