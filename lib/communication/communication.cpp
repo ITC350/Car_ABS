@@ -68,3 +68,8 @@ bool communication::check_halt()
 {
     return m_serial.read() == HALT;
 }
+
+void communication::send(uint16_t msg[1024], size_t length)
+{
+    m_serial.write((uint8_t *)msg, length * 2);
+}

@@ -3,7 +3,7 @@
 #include <Arduino.h>
 #include "opcode.hpp"
 
-#define DEFAULT_RECV_SIZE 32
+#define DEFAULT_RECV_SIZE 48
 
 class communication {
 private:
@@ -17,6 +17,6 @@ public:
     ~communication();
     uint32_t recv_msg[DEFAULT_RECV_SIZE];
     void receive();
-    void send(uint16_t msg[1024]);
+    void send(uint16_t msg[1024], size_t length);
     bool check_halt();
 };
