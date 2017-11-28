@@ -33,7 +33,8 @@ ISR(TIMER1_COMPA_vect) { //timer1 interrupt
 
 dcmotor::dcmotor(communication &comm, uint16_t acc_const, uint16_t datafreq, double trgt_spd, double kp, double ki, double kd):
     m_comm(comm),
-    myPID(&Input, &Output, &trgt_spd, kp, ki, kd, DIRECT),
+    m_trgt_spd(trgt_spd),
+    myPID(&Input, &Output, &m_trgt_spd, kp, ki, kd, DIRECT),
     m_datafreq(datafreq),
     m_acc_const(acc_const)  {
   pinMode(m_has_pin, OUTPUT);
@@ -56,13 +57,16 @@ dcmotor::dcmotor(communication &comm, uint16_t acc_const, uint16_t datafreq, dou
   TCCR1B = 0;               //set entire TCCR1B register to 0
   TCNT1 = 0;                //Register for timer value
 
-  OCR1A = 62500;            //compare match register 16MHz/256/1Hz  1 hz timer
+  OCR1A = 62500/50;            //compare match register 16MHz/256/50Hz  50 hz timer
   TCCR1B |= (1 << WGM12);   //CTC mode
   TCCR1B |= (1 << CS12);    //256 prescaler
   TIMSK1 |= (1 << OCIE1A);  //enable timer compare interrupt
   interrupts();//allow interrupts
+  Serial.print("dataFreq: ");Serial.println(m_datafreq);
+  Serial.print("accconst: ");Serial.println(m_acc_const);
+  Serial.print("trgt_spd: ");Serial.println(m_trgt_spd);
 
-
+  delay(1000);
 }
 dcmotor::~dcmotor() {}
 
@@ -101,8 +105,9 @@ void dcmotor::pid(){
             cur_time2 = millis();
             dataArr[dataArrItt] = m_sensors[1].getvalue();
             ++dataArrItt;
+            Serial.println(m_sensors[2].getvalue());
         }
-    Serial.println(m_sensors[2].getvalue());
+
     }
     emStop();
 }
@@ -114,7 +119,7 @@ void dcmotor::Accelerator(){
     uint32_t cur_time2 = 0;
     while(pwm < 255){
         //if(m_comm.check_halt())emStop();
-        if(millis() - cur_time >= m_acc_const){
+        if(millis() - cur_time >= m_acc_const){ //kontroller om der er gået acc_const i ms.
             cur_time=millis();
             ++pwm;
             Forward(pwm);
@@ -123,10 +128,11 @@ void dcmotor::Accelerator(){
           cur_time2 = millis();
           dataArr[dataArrItt] = m_sensors[1].getvalue();
           ++dataArrItt;
+          Serial.println(m_sensors[2].getvalue());
         }
-        if (m_sensors[1].getvalue() == (trgt_spd*3)/4) {
+        if (m_sensors[1].getvalue() >= (m_trgt_spd*3)/4) {
             return;
         }
-        Serial.print(m_sensors[2].getvalue());
+
     }
 }

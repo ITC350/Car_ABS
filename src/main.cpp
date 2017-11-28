@@ -7,11 +7,11 @@
 
 void setup() {
   double Kp = 0.2, Ki = 0, Kd = 0;
-  double target_speed = 5;
-  uint32_t acc_const = 20;
+  double target_speed = 15;
+  uint32_t acc_const = 100;
   uint32_t data_freq = 50;
   bool disable_abs = true;
-
+  delay(2000);
   communication comm(Serial);
   //comm.receive();
 
