@@ -10,7 +10,7 @@ private:
     HardwareSerial m_serial;
     const uint16_t baud_rate = 9600;
     uint8_t recv_single_byte();
-    double recv_double();
+    uint32_t recv_quad();
     
 public:
     communication(HardwareSerial serial);
