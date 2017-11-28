@@ -45,14 +45,15 @@ dcmotor::dcmotor(communication &comm, uint16_t acc_const, uint16_t datafreq, dou
   attachInterrupt(digitalPinToInterrupt(3), triggerISR4, HIGH); //attach interrupt
 
   noInterrupts();//stop interrupts
-  //Timer5 16 bit
-  //  #######################################################
-  TCCR5A = 0;               //set entire TCCR1A register to 0
-  TCCR5B = 0;               //set entire TCCR1B register to 0
-  TCNT5 = 0;                //Register for timer value
+  //Timer1 16 bit
+  TCCR1A = 0;               //set entire TCCR1A register to 0
+  TCCR1B = 0;               //set entire TCCR1B register to 0
+  TCNT1 = 0;                //Register for timer value
 
-  TCCR5B |= (1 << CS52) | (1 << CS50);    // prescaler
-  TCCR1B |= (0 << WGM52);   //Normal mode
+  OCR1A = 62500;            //compare match register 16MHz/256/1Hz  1 hz timer
+  TCCR1B |= (1 << WGM12);   //CTC mode
+  TCCR1B |= (1 << CS12);    //256 prescaler
+  TIMSK1 |= (1 << OCIE1A);  //enable timer compare interrupt
   interrupts();//allow interrupts
 
 
