@@ -31,6 +31,7 @@ ISR(TIMER1_COMPA_vect) { //timer1 interrupt
   m_sensors[3].average();
 }
 
+
 dcmotor::dcmotor(communication &comm, uint16_t acc_const, uint16_t datafreq, double trgt_spd, double kp, double ki, double kd):
     m_comm(comm),
     myPID(&Input, &Output, &trgt_spd, kp, ki, kd, DIRECT),
@@ -101,8 +102,9 @@ void dcmotor::pid(){
             dataArr[dataArrItt] = m_sensors[1].average();
             ++dataArrItt;
         }
-    emStop();
+    Serial.println(m_sensors[1].average());
     }
+    emStop();
 }
 
 void dcmotor::Accelerator(){
@@ -125,5 +127,6 @@ void dcmotor::Accelerator(){
         if (m_sensors[1].average() == (trgt_spd*3)/4) {
             return;
         }
+        Serial.println(m_sensors[1].average());
     }
 }
