@@ -22,10 +22,10 @@ uint32_t communication::recv_quad()
 {
     uint32_t q = 0;
 
-    q += recv_single_byte() << 0x20;
-    q += recv_single_byte() << 0x18;
-    q += recv_single_byte() << 0x10;
     q += recv_single_byte() << 0x08;
+    q += recv_single_byte() << 0x10;
+    q += recv_single_byte() << 0x18;
+    q += recv_single_byte() << 0x20;
 
     return q;
 }
