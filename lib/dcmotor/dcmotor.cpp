@@ -23,7 +23,13 @@ void triggerISR3(){
 void triggerISR4(){
     m_sensors[3].event();
 }
-
+//Timer interrrput
+ISR(TIMER1_COMPA_vect) { //timer1 interrupt
+    m_sensors[0].average();
+    m_sensors[1].average();
+    m_sensors[2].average();
+    m_sensors[3].average();
+}
 
 dcmotor::dcmotor(communication &comm, uint16_t acc_const, uint16_t datafreq, double trgt_spd, double kp, double ki, double kd):
     m_comm(comm),
