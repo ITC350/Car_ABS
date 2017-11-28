@@ -23,13 +23,6 @@ void triggerISR3(){
 void triggerISR4(){
     m_sensors[3].event();
 }
-ISR(TIMER1_COMPA_vect) { //timer1 interrupt
-    m_sensors[0].average()
-    m_sensors[1].average()
-    m_sensors[2].average()
-    m_sensors[3].average()
-}
-
 
 dcmotor::dcmotor(communication &comm, uint16_t acc_const, uint16_t datafreq, double trgt_spd, double kp, double ki, double kd):
     m_comm(comm),
@@ -51,17 +44,14 @@ dcmotor::dcmotor(communication &comm, uint16_t acc_const, uint16_t datafreq, dou
   attachInterrupt(digitalPinToInterrupt(3), triggerISR4, HIGH); //attach interrupt
 
   noInterrupts();//stop interrupts
+  //Timer5 16 bit
+  //  #######################################################
+  TCCR5A = 0;               //set entire TCCR1A register to 0
+  TCCR5B = 0;               //set entire TCCR1B register to 0
+  TCNT5 = 0;                //Register for timer value
 
-  //Timer1 16 bit
-  TCCR1A = 0;               //set entire TCCR1A register to 0
-  TCCR1B = 0;               //set entire TCCR1B register to 0
-  TCNT1 = 0;                //Register for timer value
-
-  OCR1A = 1250;            //compare match register 16MHz/256/50Hz  50 hz timer
-  TCCR1B |= (1 << WGM12);   //CTC mode
-  TCCR1B |= (1 << CS12);    //256 prescaler
-  TIMSK1 |= (1 << OCIE1A);  //enable timer compare interrupt
-
+  TCCR5B |= (1 << CS52) | (1 << CS50);    // prescaler
+  TCCR1B |= (0 << WGM52);   //Normal mode
   interrupts();//allow interrupts
 
 
@@ -99,12 +89,13 @@ void dcmotor::pid(){
     Input = m_sensors[1].average();
     myPID.Compute();
     analogWrite(m_has_pin, Output);
-    if (millis()-cur_time2>=m_datafreq){
-      cur_time2=millis();
-      dataArr[dataArrItt] = m_sensors[1].average();
-      ++dataArrItt;
+        if (millis() - cur_time2 >= m_datafreq){
+            cur_time2 = millis();
+            dataArr[dataArrItt] = m_sensors[1].average();
+            ++dataArrItt;
+        }
+    emStop();
     }
-  }
 }
 
 void dcmotor::Accelerator(){
