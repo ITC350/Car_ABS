@@ -24,10 +24,10 @@ private:
   uint16_t acc_const;
   uint16_t dataArr[1000];
   uint16_t dataArrItt = 0;
+  uint32_t datafreq = 50;
 public:
     dcmotor(communication &comm, uint16_t acc_const, double trgt_spd, double kp, double ki, double kd);
     ~dcmotor();
-    const uint32_t datafreq = 50;
     void Forward(uint8_t fwd_speed);
     void Backward(uint8_t bwd_speed);
     void Accelerator();
