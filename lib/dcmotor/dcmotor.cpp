@@ -31,10 +31,13 @@ ISR(TIMER1_COMPA_vect) { //timer1 interrupt
     m_sensors[3].average();
 }
 
-dcmotor::dcmotor(communication &comm, uint16_t acc_const, uint16_t datafreq, double trgt_spd, double kp, double ki, double kd):
+dcmotor::dcmotor(communication &comm, uint16_t acc_const, uint16_t datafreq, uint16_t trgt_spd, double kp, double ki, double kd):
     m_comm(comm),
     m_trgt_spd(trgt_spd),
-    myPID(&Input, &Output, &m_trgt_spd, kp, ki, kd, DIRECT),
+    m_kp(kp),
+    m_ki(ki),
+    m_kd(kd),
+    //myPID(&Input, &Output, &m_trgt_spd, kp, ki, kd, DIRECT),
     m_datafreq(datafreq),
     m_acc_const(acc_const)  {
   pinMode(m_has_pin, OUTPUT);
@@ -90,17 +93,28 @@ void dcmotor::emStop(){
 
 void dcmotor::pid(){
     uint32_t cur_time2 = 0;
+    uint32_t timerset = millis();
+    uint16_t pid_time_change = 0;
+    double outputSum = pwm;
+
     //initialize the variables we're linked to
-    Input = m_sensors[1].getvalue();
 
     //turn the PID on
-    myPID.SetMode(AUTOMATIC);
+    //myPID.SetMode(AUTOMATIC);
 
-    while(cur_time2 <= MAXRUNTIME){
+    while(millis() - timerset <= MAXRUNTIME){
         //if(m_comm.check_halt())emStop();
-    Input = m_sensors[1].getvalue();
-    myPID.Compute();
-    analogWrite(m_has_pin, Output);
+        if (millis()-pid_time_change>=pid_sampletime) { //PID compute
+
+            uint16_t input = m_sensors[1].getvalue();
+            int16_t error = m_trgt_spd - input;
+            outputSum += (m_ki * error);                //I delen udregnes
+            double output = m_kp * error;                 //P delen udregnes
+            output += outputSum;
+            if(output > 255)output = 255;               //sørger for output holder sig inden for range
+            else if(output < 0)output = 0;    //myPID.Compute();
+            analogWrite(m_has_pin, output);
+        }
         if (millis() - cur_time2 >= m_datafreq){
             cur_time2 = millis();
             dataArr[dataArrItt] = m_sensors[1].getvalue();
