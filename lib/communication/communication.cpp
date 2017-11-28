@@ -34,6 +34,9 @@ void communication::receive()
 {
     uint32_t op = 0;
 
+    recv_single_byte();
+    recv_single_byte();
+
     for (size_t i = 0; i < DEFAULT_RECV_SIZE; i++)
     {
         op = recv_single_byte();
