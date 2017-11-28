@@ -4,8 +4,11 @@ void sensor::event() {
     counter++;
 } 
  
-uint16_t sensor::average() { 
-    temp_counter = counter;
+void sensor::average() { 
+    value = counter;
     counter = 0;
-    return temp_counter;
+} 
+
+uint16_t sensor::getvalue() { 
+    return value;
 } 
