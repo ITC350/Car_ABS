@@ -134,6 +134,7 @@ void dcmotor::Accelerator(){
     uint32_t cur_time2 = 0;
     while(pwm < 255){
         //if(m_comm.check_halt())emStop();
+        //Serial.print("pwm: ");Serial.println(pwm);
         if(millis() - cur_time >= m_acc_const){                 //kontroller om der er gået acc_const i ms og øger derefter outputtet til motoren.
             cur_time=millis();
             ++pwm;
@@ -145,7 +146,10 @@ void dcmotor::Accelerator(){
           ++dataArrItt;
           Serial.println(m_sensors[2].getvalue());
         }
-        if (m_sensors[1].getvalue() >= (m_trgt_spd*3)/4) {      //Ved tre fjerdedele af den ønsket hastighed stoppes accelerationen
+        if (m_sensors[1].getvalue() >= (m_trgt_spd*7)/8) {      //Ved tre fjerdedele af den ønsket hastighed stoppes accelerationen
+            /*Serial.print("spd: ");Serial.println(m_sensors[1].getvalue());
+            Serial.print("pwm: ");Serial.println(pwm);
+            delay(1000);*/
             return;
         }
 

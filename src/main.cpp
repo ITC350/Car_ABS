@@ -6,16 +6,23 @@
 
 
 void setup() {
-  double Kp = 0, Ki = 0, Kd = 0;
+  double Kp = 0, Ki = 0, Kd =0; //Kp=0.4 Ki=0.005 Kd=0
   uint16_t target_speed = 0; //check om uint16 er ok
   uint32_t acc_const = 0;
   uint32_t data_freq = 0;
   bool disable_abs = true;
 
+  servo myServo;
   communication comm(Serial);
-  comm.receive();
+  dcmotor motor(comm, acc_const, data_freq, target_speed, Kp, Ki, Kd);
+  //comm.receive();
 
-  for (uint8_t i = 0; i < DEFAULT_RECV_SIZE; i++) {
+  myServo.Servo_turn(myServo.CENTRUM);
+  delay(1000);
+  motor.Accelerator();
+  motor.pid();
+  //motor.emStop();
+  /*for (uint8_t i = 0; i < DEFAULT_RECV_SIZE; i++) {
     switch (comm.recv_msg[i]) {
       case NOP:
         break;
@@ -41,7 +48,7 @@ void setup() {
       default:
         return;
     }
-  }
+  }*/
 }
 
 void loop() {

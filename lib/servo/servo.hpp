@@ -14,8 +14,9 @@
 class servo {
 private:
   const int m_servoPin = 5;
-  enum turn_val{LEFT=32, RIGHT=64, HALEFT=40, HARIGHT=56, CENTRUM=48};
+
 public:
+    typedef enum {LEFT=32, RIGHT=64, HALEFT=40, HARIGHT=56, CENTRUM=52}turn_val;
     servo();
     ~servo();
     void Servo_turn(turn_val dir);
