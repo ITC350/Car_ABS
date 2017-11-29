@@ -34,8 +34,8 @@ void communication::receive()
 {
     uint32_t op = 0;
 
-    recv_single_byte();
-    recv_single_byte();
+    //recv_single_byte();
+    //recv_single_byte();
 
     for (size_t i = 0; i < DEFAULT_RECV_SIZE; i++)
     {
@@ -72,7 +72,7 @@ bool communication::check_halt()
     return m_serial.read() == HALT;
 }
 
-void communication::send(uint16_t msg[1024], size_t length)
+void communication::send(uint8_t *msg, size_t length)
 {
-    m_serial.write((uint8_t *)msg, length * 2);
+    m_serial.write(msg, length);
 }

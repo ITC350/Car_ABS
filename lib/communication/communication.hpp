@@ -17,6 +17,6 @@ public:
     ~communication();
     uint32_t recv_msg[DEFAULT_RECV_SIZE];
     void receive();
-    void send(uint16_t msg[1024], size_t length);
+    void send(uint8_t *msg, size_t length);
     bool check_halt();
 };

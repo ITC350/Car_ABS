@@ -35,13 +35,15 @@ void setup() {
           motor.Accelerator();
           motor.pid();
           //motor.ABS();
-          comm.send(motor.dataArr, motor.dataArrItt);
+          comm.send((uint8_t *)motor.dataArr, motor.dataArrItt * 2);
         }
         break;
       default:
         return;
     }
   }
+
+  //comm.send((uint8_t *)comm.recv_msg, DEFAULT_RECV_SIZE * 4);
 }
 
 void loop() {
