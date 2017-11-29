@@ -1,9 +1,9 @@
 #include "communication.hpp"
 
-communication::communication(HardwareSerial serial)
+communication::communication(HardwareSerial &serial)
   : m_serial(serial)
 {
-    serial.begin(baud_rate);
+  m_serial.begin(baud_rate);
 }
 communication::~communication()
 {
@@ -13,21 +13,17 @@ communication::~communication()
 uint8_t communication::recv_single_byte()
 {
     while (!m_serial.available()) {}
-
-    if (m_serial.available())
-    {
-        return m_serial.read();
-    }
+    return m_serial.read();
 }
 
 uint32_t communication::recv_quad()
 {
     uint32_t q = 0;
 
+    q += recv_single_byte();
     q += recv_single_byte() << 0x08;
     q += recv_single_byte() << 0x10;
     q += recv_single_byte() << 0x18;
-    q += recv_single_byte() << 0x20;
 
     return q;
 }
@@ -42,7 +38,7 @@ void communication::receive()
     for (size_t i = 0; i < DEFAULT_RECV_SIZE; i++)
     {
         op = recv_single_byte();
-        
+
         switch (op) {
             case NOP:
                 recv_msg[i] = NOP;
