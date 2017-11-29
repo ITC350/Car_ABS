@@ -12,6 +12,8 @@ communication::~communication()
 
 uint8_t communication::recv_single_byte()
 {
+    while (!m_serial.available()) {}
+
     if (m_serial.available())
     {
         return m_serial.read();
