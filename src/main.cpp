@@ -12,7 +12,7 @@
 void setup() {
 
   double Kp = 0, Ki = 0, Kd = 0; //Kp=0.4 Ki=0.005 Kd=0
-  uint16_t target_speed = 0; 
+  uint16_t target_speed = 0;
   uint16_t acc_const = 0;
   uint16_t data_freq = 0;
   bool disable_abs = true;
@@ -32,9 +32,9 @@ void setup() {
       case NOP:
         break;
       case SETTINGS:
-        Kp = 1.0 * comm.recv_msg[++i];
-        Ki = 1.0 * comm.recv_msg[++i];
-        Kd = 1.0 * comm.recv_msg[++i];
+        Kp = (float)comm.recv_msg[++i];
+        Ki = (float)comm.recv_msg[++i];
+        Kd = (float)comm.recv_msg[++i];
         target_speed = comm.recv_msg[++i];
         acc_const = comm.recv_msg[++i];
         data_freq = comm.recv_msg[++i];
