@@ -1,10 +1,6 @@
-//
 //  dcmotor.cpp
 //  Car_ABS
-//
-//  Created by <author> on 18/11/2017.
-//
-//
+//  Created by ITC350 on 18/11/2017.
 
 #include "dcmotor.hpp"
 //#include <stdint.h>
@@ -31,6 +27,13 @@ ISR(TIMER1_COMPA_vect) { //timer1 interrupt
     m_sensors[3].average();
 }
 
+ISR(WDT_vect)
+{
+    analogWrite(10, 0);
+    digitalWrite(11, LOW);
+    digitalWrite(12, LOW);
+}
+
 dcmotor::dcmotor(communication &comm, uint16_t acc_const, uint16_t datafreq, uint16_t trgt_spd, double kp, double ki, double kd):
     m_comm(comm),
     m_trgt_spd(trgt_spd),
@@ -39,10 +42,14 @@ dcmotor::dcmotor(communication &comm, uint16_t acc_const, uint16_t datafreq, uin
     m_kd(kd),
     //myPID(&Input, &Output, &m_trgt_spd, kp, ki, kd, DIRECT),
     m_datafreq(datafreq),
-    m_acc_const(acc_const)  {
+    m_acc_const(acc_const)
+{
   pinMode(m_has_pin, OUTPUT);
   pinMode(m_reta_pin, OUTPUT);
   pinMode(m_retb_pin, OUTPUT);
+
+
+
 
   //sensor
   pinMode(18, INPUT);
@@ -64,6 +71,7 @@ dcmotor::dcmotor(communication &comm, uint16_t acc_const, uint16_t datafreq, uin
   TCCR1B |= (1 << WGM12);   //CTC mode
   TCCR1B |= (1 << CS12);    //256 prescaler
   TIMSK1 |= (1 << OCIE1A);  //enable timer compare interrupt
+
   interrupts();//allow interrupts
   Serial.print("dataFreq: ");Serial.println(m_datafreq);
   Serial.print("accconst: ");Serial.println(m_acc_const);
@@ -128,16 +136,35 @@ void dcmotor::pid(){
 
 void dcmotor::Accelerator(){
 /*Sørger for at bilen kan accelerrere langsomt op så hjulspind kan undgåes*/
+    noInterrupts();
+    wdt_reset();    // reset the WDT timer
+    /*
+    WDTCSR configuration:
+    WDIE = 1: Interrupt Enable
+    WDE = 0 :Reset Disable
+    WDP3 = 1 :For 4000ms Time-out
+    WDP2 = 0 :For 4000ms Time-out
+    WDP1 = 0 :For 4000ms Time-out
+    WDP0 = 0 :For 4000ms Time-out
+    */
+    // Enter Watchdog Configuration mode:
+    WDTCSR |= (1<<WDCE) | (1<<WDE);
+    // Set Watchdog settings:
+    WDTCSR = (1<<WDIE) | (0<<WDE) | (1<<WDP3) | (0<<WDP2) | (0<<WDP1) | (0<<WDP0);                                                //resetter watchdog så bilen kører maks 4 sek.
+
+    interrupts();
 
     Forward(pwm);
     uint32_t cur_time = 0;
     uint32_t cur_time2 = 0;
+
     while(pwm < 255){
         //if(m_comm.check_halt())emStop();
+        //Serial.print("pwm: ");Serial.println(pwm);
         if(millis() - cur_time >= m_acc_const){                 //kontroller om der er gået acc_const i ms og øger derefter outputtet til motoren.
             cur_time=millis();
             ++pwm;
-            Forward(pwm);
+            analogWrite(m_has_pin, pwm);
         }
         if (millis() - cur_time2 >= m_datafreq){                //gemmer data i arrary med en frekvens sat i datafreq
           cur_time2 = millis();
@@ -145,7 +172,10 @@ void dcmotor::Accelerator(){
           ++dataArrItt;
           Serial.println(m_sensors[2].getvalue());
         }
-        if (m_sensors[1].getvalue() >= (m_trgt_spd*3)/4) {      //Ved tre fjerdedele af den ønsket hastighed stoppes accelerationen
+        if (m_sensors[1].getvalue() >= (m_trgt_spd*7)/8) {      //Ved tre fjerdedele af den ønsket hastighed stoppes accelerationen
+            /*Serial.print("spd: ");Serial.println(m_sensors[1].getvalue());
+            Serial.print("pwm: ");Serial.println(pwm);
+            delay(1000);*/
             return;
         }
 
