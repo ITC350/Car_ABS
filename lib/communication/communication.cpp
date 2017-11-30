@@ -3,8 +3,9 @@
 communication::communication(HardwareSerial &serial)
   : m_serial(serial)
 {
-  m_serial.begin(baud_rate);
+    m_serial.begin(baud_rate);
 }
+
 communication::~communication()
 {
     m_serial.end();
@@ -31,9 +32,6 @@ uint32_t communication::recv_quad()
 void communication::receive()
 {
     uint32_t op = 0;
-
-    //recv_single_byte();
-    //recv_single_byte();
 
     for (size_t i = 0; i < DEFAULT_RECV_SIZE; i++)
     {
