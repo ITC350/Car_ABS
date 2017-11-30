@@ -11,21 +11,21 @@
 
 void setup() {
 
-  double Kp = 0, Ki = 0, Kd = 0; //Kp=0.4 Ki=0.005 Kd=0
-  uint16_t target_speed = 0;
-  uint16_t acc_const = 0;
-  uint16_t data_freq = 0;
+  double Kp = 0.4, Ki = 0.005, Kd = 0; //Kp=0.4 Ki=0.005 Kd=0
+  uint16_t target_speed = 10; //10
+  uint16_t acc_const = 100;   //100
+  uint16_t data_freq = 1000;   //1000
   bool disable_abs = true;
 
   servo myServo;
-  communication comm(Serial1);
+  communication comm(Serial);
   comm.receive();
   dcmotor motor(comm, acc_const, data_freq, target_speed, Kp, Ki, Kd);
 
-  myServo.Servo_turn(661);
+  myServo.Servo_turn(647);
   delay(2000);
-  motor.Accelerator();
-  motor.pid();
+  //motor.Accelerator();
+  //motor.pid();
   //motor.emStop();
   for (uint8_t i = 0; i < DEFAULT_RECV_SIZE; i++) {
     switch (comm.recv_msg[i]) {
@@ -44,8 +44,8 @@ void setup() {
         break;
       case START: {
           dcmotor motor(comm, acc_const, data_freq, target_speed, Kp, Ki, Kd);
-          //motor.Accelerator();
-          //motor.pid();
+          motor.Accelerator();
+          motor.pid();
           //motor.ABS();
           comm.send((uint8_t *)motor.dataArr, 2048);
         }
