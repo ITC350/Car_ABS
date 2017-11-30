@@ -5,11 +5,15 @@
 #include "communication.hpp"
 
 
+
+
+
+
 void setup() {
-  double Kp = 0, Ki = 0, Kd =0; //Kp=0.4 Ki=0.005 Kd=0
-  uint16_t target_speed = 0; //check om uint16 er ok
-  uint32_t acc_const = 0;
-  uint32_t data_freq = 0;
+  double Kp = 0.4, Ki = 0.005, Kd =0; //Kp=0.4 Ki=0.005 Kd=0
+  uint16_t target_speed = 10; //check om uint16 er ok
+  uint32_t acc_const = 100;
+  uint32_t data_freq = 1000;
   bool disable_abs = true;
 
   servo myServo;
@@ -17,8 +21,8 @@ void setup() {
   dcmotor motor(comm, acc_const, data_freq, target_speed, Kp, Ki, Kd);
   //comm.receive();
 
-  myServo.Servo_turn(myServo.CENTRUM);
-  delay(1000);
+  myServo.Servo_turn(661);
+  delay(2000);
   motor.Accelerator();
   motor.pid();
   //motor.emStop();

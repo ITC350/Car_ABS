@@ -19,7 +19,8 @@ public:
     typedef enum {LEFT=32, RIGHT=64, HALEFT=40, HARIGHT=56, CENTRUM=52}turn_val;
     servo();
     ~servo();
-    void Servo_turn(turn_val dir);
+    void Servo_turn(uint16_t dir);
+
 protected:
 
 };

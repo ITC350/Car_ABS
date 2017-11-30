@@ -3,12 +3,13 @@
 //  Created by <author> on 18/11/2017.
 
 #pragma once
-#define MAXRUNTIME 15000
+#define MAXRUNTIME 4000
 //#ifndef dcmotor_hpp
 //#define dcmotor_hpp
 #include <Arduino.h>
+#include <avr/wdt.h>
 //#include <stdint.h>
-#include <PID_v1.h>
+//#include <PID_v1.h>
 #include "sensor.hpp"
 #include "communication.hpp"
 
