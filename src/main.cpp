@@ -35,7 +35,7 @@ void setup() {
           motor.Accelerator();
           motor.pid();
           //motor.ABS();
-          comm.send((uint8_t *)motor.dataArr, motor.dataArrItt * 2);
+          comm.send((uint8_t *)motor.dataArr, 2048);
         }
         break;
       default:
