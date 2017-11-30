@@ -15,6 +15,7 @@ ISR(TIMER3_COMPA_vect) { //timer3 interrupt
 }
 
 servo::servo()  {
+
   pinMode(m_servoPin, OUTPUT);
 
     noInterrupts();//stop interrupts
