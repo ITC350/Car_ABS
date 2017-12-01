@@ -13,6 +13,10 @@
 #include "sensor.hpp"
 #include "communication.hpp"
 
+#define MAX(a,b) ((a) > (b) ? (a) : (b))
+
+#define MIN(a,b) ((a) < (b) ? (a) : (b))
+
 class dcmotor {
 private:
   const uint8_t m_has_pin=10;
@@ -39,11 +43,8 @@ public:
     void Accelerator();
     void emStop();
     void pid();
-    void ABS();
+    void ABS(uint8_t abs_const);
     uint16_t dataArr[1024] = {0};
     uint16_t dataArrItt = 0;
     bool detect(int sort, int hvid);
 };
-
-
-//#endif /* dcmotor_hpp */
