@@ -27,12 +27,8 @@ private:
   uint16_t m_acc_const;
   uint16_t m_datafreq;
   uint16_t pid_sampletime = 50;
-<<<<<<< HEAD
   uint16_t lastTimepid;
   uint16_t lastTimeData;
-=======
-  int val = 0;
->>>>>>> f47a84abdb8ffaca405bf5a78a37c4ff76c5c982
 
 public:
     dcmotor(communication &comm, uint16_t acc_const, uint16_t datafreq, uint16_t trgt_spd, double kp, double ki, double kd);

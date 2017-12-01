@@ -179,8 +179,7 @@ void dcmotor::Accelerator() {
 
 bool dcmotor::detect(int sort, int hvid) {
   int border = ((sort - hvid)/2)+hvid-100;
-  val = analogRead(A1);     // read the input pin
-  if (val < border){
+  if (analogRead(A1) < border){
     return true;
   }
   else{
