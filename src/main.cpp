@@ -24,6 +24,12 @@ void setup() {
 
   myServo.Servo_turn(647);
   delay(2000);
+  while (motor.detect(850, 50) == false) {
+    motor.Forward(50);
+    /* code */
+  }
+  motor.emStop();
+
   //motor.Accelerator();
   //motor.pid();
   //motor.emStop();

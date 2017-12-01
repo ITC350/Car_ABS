@@ -43,6 +43,7 @@ dcmotor::dcmotor(communication &comm, uint16_t acc_const, uint16_t datafreq,
   pinMode(19, INPUT);
   pinMode(2, INPUT);
   pinMode(3, INPUT);
+  pinMode(A1, INPUT);
   attachInterrupt(digitalPinToInterrupt(18), triggerISR1,
                   HIGH); // attach interrupt
   attachInterrupt(digitalPinToInterrupt(19), triggerISR2,
@@ -177,4 +178,15 @@ void dcmotor::Accelerator() {
     delay(1000);*/
   }
   return;
+}
+
+bool dcmotor::detect(int sort, int hvid) {
+  int border = ((sort - hvid)/2)+hvid-100;
+  val = analogRead(A1);     // read the input pin
+  if (val < border){
+    return true;
+  }
+  else{
+    return false;
+  }
 }

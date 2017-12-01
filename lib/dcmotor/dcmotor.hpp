@@ -27,6 +27,7 @@ private:
   uint16_t m_acc_const;
   uint16_t m_datafreq;
   uint16_t pid_sampletime = 50;
+  int val = 0;
 
 public:
     dcmotor(communication &comm, uint16_t acc_const, uint16_t datafreq, uint16_t trgt_spd, double kp, double ki, double kd);
@@ -39,6 +40,7 @@ public:
     void ABS();
     uint16_t dataArr[1024] = {0};
     uint16_t dataArrItt = 0;
+    bool detect(int sort, int hvid);
 };
 
 
