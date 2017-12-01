@@ -3,7 +3,7 @@
 //  Created by <author> on 18/11/2017.
 
 #pragma once
-#define MAXRUNTIME 4000
+#define MAXDATAINPUT 1024
 //#ifndef dcmotor_hpp
 //#define dcmotor_hpp
 #include <Arduino.h>
@@ -34,6 +34,7 @@ private:
   uint16_t lastTimepid;
   uint16_t lastTimeData;
   int val = 0;
+  bool Datacollector();
 
 public:
     dcmotor(communication &comm, uint16_t acc_const, uint16_t datafreq, uint16_t trgt_spd, double kp, double ki, double kd);
@@ -44,7 +45,7 @@ public:
     void emStop();
     void pid();
     void ABS(uint8_t abs_const);
-    uint16_t dataArr[1024] = {0};
+    uint16_t dataArr[MAXDATAINPUT] = {0};
     uint16_t dataArrItt = 0;
     bool detect(int sort, int hvid);
 };

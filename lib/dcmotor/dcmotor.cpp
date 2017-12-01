@@ -94,11 +94,26 @@ void dcmotor::emStop() {
   digitalWrite(m_retb_pin, LOW);
 }
 
+bool dcmotor::Datacollector(){
+    uint32_t timerset = millis();
+    uint16_t data_time_change = (timerset - lastTimeData);
+    if(dataArrItt >= MAXDATAINPUT){
+        return false;
+    }
+    if (data_time_change >= m_datafreq) {
+        dataArr[dataArrItt] = m_sensors[1].getvalue();
+        ++dataArrItt;
+        //Serial.println(m_sensors[2].getvalue());
+        lastTimeData = timerset;
+
+    }
+    return true;
+}
+
 void dcmotor::pid() {
-    uint32_t cur_time2 = 0;
     uint32_t timerset = millis();
     uint16_t pid_time_change = (timerset - lastTimepid);
-    uint16_t data_time_change = (timerset - lastTimeData);
+
     double outputSum = pwm;
     // initialize the variables we're linked to turn the PID on
     // myPID.SetMode(AUTOMATIC);
@@ -116,16 +131,8 @@ void dcmotor::pid() {
 
         analogWrite(m_has_pin, output);
         lastTimepid = timerset;
+        Datacollector();
     }
-    if (data_time_change >= m_datafreq) {
-        cur_time2 = millis();
-        dataArr[dataArrItt] = m_sensors[1].getvalue();
-        ++dataArrItt;
-        //Serial.println(m_sensors[2].getvalue());
-        lastTimeData = timerset;
-    }
-
-
 }
 
 
@@ -162,12 +169,7 @@ void dcmotor::Accelerator() {
       cur_time = millis();
       ++pwm;
       analogWrite(m_has_pin, pwm);    }
-    if (millis() - cur_time2 >= m_datafreq) { // gemmer data i arrary med en frekvens sat i datafreq
-      cur_time2 = millis();
-      dataArr[dataArrItt] = m_sensors[1].getvalue();
-      ++dataArrItt;
-      //Serial.println(m_sensors[2].getvalue());
-    }
+    Datacollector();
     if (m_sensors[1].getvalue() >= (m_trgt_spd * 7) / 8)return; // Ved tre fjerdedele af den ønsket hastighed stoppes accelerationen
     /*Serial.print("spd: ");Serial.println(m_sensors[1].getvalue());
     Serial.print("pwm: ");Serial.println(pwm);
@@ -201,12 +203,12 @@ void dcmotor::ABS(uint8_t abs_const)
                   MIN(m_sensors[1].getvalue(),
                       MIN(m_sensors[2].getvalue(),
                           m_sensors[3].getvalue())));
-        
+
         max = MAX(m_sensors[0].getvalue(),
                   MAX(m_sensors[1].getvalue(),
                       MAX(m_sensors[2].getvalue(),
                           m_sensors[3].getvalue())));
-        
+
         if (max <= abs_const) {
             emStop();
         }
