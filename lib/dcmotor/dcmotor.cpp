@@ -121,7 +121,7 @@ void dcmotor::pid() {
         cur_time2 = millis();
         dataArr[dataArrItt] = m_sensors[1].getvalue();
         ++dataArrItt;
-        Serial.println(m_sensors[2].getvalue());
+        //Serial.println(m_sensors[2].getvalue());
         lastTimeData = timerset;
     }
 
@@ -162,12 +162,11 @@ void dcmotor::Accelerator() {
       cur_time = millis();
       ++pwm;
       analogWrite(m_has_pin, pwm);    }
-    if (millis() - cur_time2 >=
-        m_datafreq) { // gemmer data i arrary med en frekvens sat i datafreq
+    if (millis() - cur_time2 >= m_datafreq) { // gemmer data i arrary med en frekvens sat i datafreq
       cur_time2 = millis();
       dataArr[dataArrItt] = m_sensors[1].getvalue();
       ++dataArrItt;
-      Serial.println(m_sensors[2].getvalue());
+      //Serial.println(m_sensors[2].getvalue());
     }
     if (m_sensors[1].getvalue() >= (m_trgt_spd * 7) / 8)return; // Ved tre fjerdedele af den ønsket hastighed stoppes accelerationen
     /*Serial.print("spd: ");Serial.println(m_sensors[1].getvalue());
@@ -178,8 +177,10 @@ void dcmotor::Accelerator() {
 }
 
 bool dcmotor::detect(int sort, int hvid) {
+
   int border = ((sort - hvid)/2)+hvid-100;
   if (analogRead(A1) < border){
+      wdt_disable();
     return true;
   }
   else{
