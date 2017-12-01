@@ -208,13 +208,13 @@ void dcmotor::ABS()
                       MAX(m_sensors[2].getvalue(),
                           m_sensors[3].getvalue())));
         
-        if (max <= 5) {
+        if (max <= 2) {
             emStop();
         }
 
-        if (max >= min + 5) {
+        if (max >= min + 2) {
             Forward(_pwm/2);
             _pwm = _pwm / 2;
         }
-    } while (max >= 5);
+    } while (max >= 2);
 }
