@@ -42,7 +42,7 @@ public:
     void Accelerator();
     void emStop();
     void pid();
-    void ABS(uint8_t abs_const);
+    void ABS(uint8_t abs_const, uint8_t abs_delay);
     uint16_t dataArr[1024] = {0};
     uint16_t dataArrItt = 0;
     bool detect(int sort, int hvid);
