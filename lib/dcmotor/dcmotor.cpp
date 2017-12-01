@@ -190,15 +190,23 @@ bool dcmotor::detect(int sort, int hvid) {
   }
 }
 
-void dcmotor::ABS(uint8_t abs_const)
+void dcmotor::ABS(uint8_t abs_const, uint8_t abs_delay)
 {
+    uint16_t sensor0, sensor1, sensor2, sensor3;
+
     uint16_t min, max;
-    uint8_t _pwm = pwm;
+    uint8_t _pwm = pwm / 2;
 
     do {
-        _pwm = _pwm/2;
+        sensor0 = m_sensors[0].getvalue();
+        sensor1 = m_sensors[1].getvalue();
+        sensor2 = m_sensors[2].getvalue();
+        sensor3 = m_sensors[3].getvalue();
+
+        _pwm = _pwm - 1;
         Backward(_pwm);
 
+<<<<<<< HEAD
         min = MIN(m_sensors[0].getvalue(),
                   MIN(m_sensors[1].getvalue(),
                       MIN(m_sensors[2].getvalue(),
@@ -209,14 +217,31 @@ void dcmotor::ABS(uint8_t abs_const)
                       MAX(m_sensors[2].getvalue(),
                           m_sensors[3].getvalue())));
 
+=======
+        delay(abs_delay);
+
+        min = MIN(sensor0,
+                  MIN(sensor1,
+                      MIN(sensor2,
+                             sensor3)));
+        
+        max = MAX(sensor0,
+                  MAX(sensor1,
+                      MAX(sensor2,
+                             sensor3)));
+        
+>>>>>>> 25b95dc57d5a6016544dc2342a1f0bbd3160382e
         if (max <= abs_const) {
             emStop();
         }
 
         if (max >= min + abs_const) {
-            _pwm = _pwm / 2;
+            _pwm = _pwm - 1;
             Forward(_pwm);
         }
+
+        delay(abs_delay);
+
     } while (max >= abs_const);
 
     emStop();
