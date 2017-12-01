@@ -97,17 +97,15 @@ void dcmotor::emStop() {
 bool dcmotor::Datacollector(){
     uint32_t timerset = millis();
     uint16_t data_time_change = (timerset - lastTimeData);
-    if(dataArrItt >= MAXDATAINPUT){
-        return false;
-    }
-    if (data_time_change >= m_datafreq) {
+
+    if (data_time_change >= m_datafreq && dataArrItt < MAXDATAINPUT) {
         dataArr[dataArrItt] = m_sensors[1].getvalue();
         ++dataArrItt;
         //Serial.println(m_sensors[2].getvalue());
         lastTimeData = timerset;
-
+        return true;
     }
-    return true;
+    return false;
 }
 
 void dcmotor::pid() {
