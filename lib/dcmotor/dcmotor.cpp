@@ -206,31 +206,18 @@ void dcmotor::ABS(uint8_t abs_const, uint8_t abs_delay)
         _pwm = _pwm - 1;
         Backward(_pwm);
 
-<<<<<<< HEAD
-        min = MIN(m_sensors[0].getvalue(),
-                  MIN(m_sensors[1].getvalue(),
-                      MIN(m_sensors[2].getvalue(),
-                          m_sensors[3].getvalue())));
-
-        max = MAX(m_sensors[0].getvalue(),
-                  MAX(m_sensors[1].getvalue(),
-                      MAX(m_sensors[2].getvalue(),
-                          m_sensors[3].getvalue())));
-
-=======
         delay(abs_delay);
 
         min = MIN(sensor0,
                   MIN(sensor1,
                       MIN(sensor2,
                              sensor3)));
-        
+
         max = MAX(sensor0,
                   MAX(sensor1,
                       MAX(sensor2,
                              sensor3)));
-        
->>>>>>> 25b95dc57d5a6016544dc2342a1f0bbd3160382e
+
         if (max <= abs_const) {
             emStop();
         }
