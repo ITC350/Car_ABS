@@ -94,36 +94,36 @@ void dcmotor::emStop() {
 }
 
 void dcmotor::pid() {
-  uint32_t cur_time2 = 0;
-  uint32_t timerset = millis();
-  uint16_t pid_time_change = 0;
-  double outputSum = pwm;
-
-  // initialize the variables we're linked to
-
-  // turn the PID on
-  // myPID.SetMode(AUTOMATIC);
-
+    uint32_t cur_time2 = 0;
+    uint32_t timerset = millis();
+    uint16_t pid_time_change = (timerset - lastTimepid);
+    uint16_t data_time_change = (timerset - lastTimeData);
+    double outputSum = pwm;
+    // initialize the variables we're linked to turn the PID on
+    // myPID.SetMode(AUTOMATIC);
     // if(m_comm.check_halt())emStop();
-    if (millis() - pid_time_change >= pid_sampletime) { // PID compute
+    if (pid_time_change >= pid_sampletime) { // PID compute
 
-      uint16_t input = m_sensors[1].getvalue();
-      int16_t error = m_trgt_spd - input;
-      outputSum += (m_ki * error);  // I delen udregnes
-      double output = m_kp * error; // P delen udregnes
-      output += outputSum;
-      if (output > 255)
-        output = 255; // sørger for output holder sig inden for range
-      else if (output < 0)
-        output = 0; // myPID.Compute();
-      analogWrite(m_has_pin, output);
+        uint16_t input = m_sensors[1].getvalue();
+        int16_t error = m_trgt_spd - input;
+        outputSum += (m_ki * error);  // I delen udregnes
+        double output = m_kp * error; // P delen udregnes
+        output += outputSum;
+
+        if (output > 255)output = 255; // sørger for output holder sig inden for range
+        else if (output < 0)output = 0; // myPID.Compute();
+
+        analogWrite(m_has_pin, output);
+        lastTimepid = timerset;
     }
-    if (millis() - cur_time2 >= m_datafreq) {
-      cur_time2 = millis();
-      dataArr[dataArrItt] = m_sensors[1].getvalue();
-      ++dataArrItt;
-      Serial.println(m_sensors[2].getvalue());
+    if (data_time_change >= m_datafreq) {
+        cur_time2 = millis();
+        dataArr[dataArrItt] = m_sensors[1].getvalue();
+        ++dataArrItt;
+        Serial.println(m_sensors[2].getvalue());
+        lastTimeData = timerset;
     }
+
 
 }
 
@@ -144,8 +144,7 @@ void dcmotor::Accelerator() {
   // Enter Watchdog Configuration mode:
   WDTCSR |= (1 << WDCE) | (1 << WDE);
   // Set Watchdog settings:
-  WDTCSR = (1 << WDIE) | (0 << WDE) | (1 << WDP3) | (0 << WDP2) | (0 << WDP1) |
-           (0 << WDP0); // resetter watchdog så bilen kører maks 4 sek.
+  WDTCSR = (1 << WDIE) | (0 << WDE) | (1 << WDP3) | (0 << WDP2) | (0 << WDP1) | (0 << WDP0); // resetter watchdog så bilen kører maks 4 sek.
 
   interrupts();
 
@@ -156,9 +155,9 @@ void dcmotor::Accelerator() {
   while (pwm < 255) {
     // if(m_comm.check_halt())emStop();
     // Serial.print("pwm: ");Serial.println(pwm);
-    if (millis() - cur_time >=
-        m_acc_const) { // kontroller om der er gået acc_const i ms og øger
-                       // derefter outputtet til motoren.
+    if (millis() - cur_time >= m_acc_const)
+    {
+    // kontroller om der er gået acc_const i ms og øger derefter outputtet til motoren.
       cur_time = millis();
       ++pwm;
       analogWrite(m_has_pin, pwm);    }
@@ -169,9 +168,7 @@ void dcmotor::Accelerator() {
       ++dataArrItt;
       Serial.println(m_sensors[2].getvalue());
     }
-    if (m_sensors[1].getvalue() >= (m_trgt_spd * 7) / 8)
-      return; // Ved tre fjerdedele af den ønsket hastighed stoppes
-              // accelerationen
+    if (m_sensors[1].getvalue() >= (m_trgt_spd * 7) / 8)return; // Ved tre fjerdedele af den ønsket hastighed stoppes accelerationen
     /*Serial.print("spd: ");Serial.println(m_sensors[1].getvalue());
     Serial.print("pwm: ");Serial.println(pwm);
     delay(1000);*/

@@ -27,6 +27,8 @@ private:
   uint16_t m_acc_const;
   uint16_t m_datafreq;
   uint16_t pid_sampletime = 50;
+  uint16_t lastTimepid;
+  uint16_t lastTimeData;
 
 public:
     dcmotor(communication &comm, uint16_t acc_const, uint16_t datafreq, uint16_t trgt_spd, double kp, double ki, double kd);
