@@ -19,7 +19,7 @@ void setup() {
 
   servo myServo;
   communication comm(Serial);
-  comm.receive();
+  //comm.receive();
   dcmotor motor(comm, acc_const, data_freq, target_speed, Kp, Ki, Kd);
 
   myServo.Servo_turn(647);
@@ -27,7 +27,7 @@ void setup() {
   //motor.Accelerator();
   //motor.pid();
   //motor.emStop();
-  for (uint8_t i = 0; i < DEFAULT_RECV_SIZE; i++) {
+  /*for (uint8_t i = 0; i < DEFAULT_RECV_SIZE; i++) {
     switch (comm.recv_msg[i]) {
       case NOP:
         break;
@@ -54,9 +54,9 @@ void setup() {
         return;
     }
 
-  }
+}*/
 
-  comm.send((uint8_t *)comm.recv_msg, 40);
+  //comm.send((uint8_t *)comm.recv_msg, 40);
 
 }
 
