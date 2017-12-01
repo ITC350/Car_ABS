@@ -32,6 +32,7 @@ private:
 public:
     dcmotor(communication &comm, uint16_t acc_const, uint16_t datafreq, uint16_t trgt_spd, double kp, double ki, double kd);
     ~dcmotor();
+    bool Datacollector();
     void Forward(uint8_t fwd_speed);
     void Backward(uint8_t bwd_speed);
     void Accelerator();
