@@ -186,3 +186,35 @@ bool dcmotor::detect(int sort, int hvid) {
     return false;
   }
 }
+
+void dcmotor::ABS()
+{
+    uint16_t min, max;
+
+    uint8_t _pwm = pwm;
+
+    do {
+        Backward(_pwm/2);
+
+        _pwm = _pwm/2;
+
+        min = MIN(m_sensors[0].getvalue(),
+                  MIN(m_sensors[1].getvalue(),
+                      MIN(m_sensors[2].getvalue(),
+                          m_sensors[3].getvalue())));
+        
+        max = MAX(m_sensors[0].getvalue(),
+                  MAX(m_sensors[1].getvalue(),
+                      MAX(m_sensors[2].getvalue(),
+                          m_sensors[3].getvalue())));
+        
+        if (max <= 5) {
+            emStop();
+        }
+
+        if (max >= min + 5) {
+            Forward(_pwm/2);
+            _pwm = _pwm / 2;
+        }
+    } while (max >= 5);
+}
