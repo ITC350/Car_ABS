@@ -3,6 +3,10 @@
 #include <Arduino.h>
 #include "opcode.hpp"
 
+#ifndef MAXDATAINPUT
+  #define MAXDATAINPUT 1024
+#endif
+
 #define DEFAULT_RECV_SIZE 10
 
 class communication {
@@ -19,4 +23,5 @@ public:
     void receive();
     void send(uint8_t *msg, size_t length);
     bool check_halt();
+    void serial_printout(uint8_t*, uint8_t*, uint8_t*, uint8_t*);
 };

@@ -1,7 +1,12 @@
 #pragma once
 
 #include <Arduino.h>
-#define MAXDATAINPUT 1024
+
+#ifndef MAXDATAINPUT
+  #define MAXDATAINPUT 1024
+#endif
+
+
 class sensor {
 private:
     volatile uint16_t counter = 0;
