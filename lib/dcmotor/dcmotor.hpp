@@ -3,7 +3,7 @@
 //  Created by <author> on 18/11/2017.
 
 #pragma once
-#define MAXDATAINPUT 1024
+
 //#ifndef dcmotor_hpp
 //#define dcmotor_hpp
 #include <Arduino.h>
@@ -29,12 +29,11 @@ private:
   uint16_t m_trgt_spd;
   //PID myPID;
   uint16_t m_acc_const;
-  uint16_t m_datafreq;
   uint16_t pid_sampletime = 50;
   uint16_t lastTimepid;
-  uint16_t lastTimeData;
   int val = 0;
-  bool Datacollector();
+  uint16_t m_datafreq;
+
 
 public:
     dcmotor(communication &comm, uint16_t acc_const, uint16_t datafreq, uint16_t trgt_spd, double kp, double ki, double kd);
@@ -44,9 +43,7 @@ public:
     void Accelerator();
     void emStop();
     void pid();
-    uint16_t dataArr[MAXDATAINPUT]={0};
     void ABS(uint8_t abs_const, uint8_t abs_delay);
-
-    uint16_t dataArrItt = 0;
     bool detect(int sort, int hvid);
+    void dataOut(uint16_t&, uint8_t*, uint8_t);
 };

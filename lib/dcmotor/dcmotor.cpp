@@ -7,16 +7,30 @@
 
 sensor m_sensors[4];
 
-void triggerISR1() { m_sensors[0].event(); }
-void triggerISR2() { m_sensors[1].event(); }
-void triggerISR3() { m_sensors[2].event(); }
-void triggerISR4() { m_sensors[3].event(); }
+void triggerISR1() {
+  m_sensors[0].event();
+}
+
+void triggerISR2() {
+  m_sensors[1].event();
+}
+
+void triggerISR3() {
+  m_sensors[2].event();
+}
+
+void triggerISR4() {
+  m_sensors[3].event();
+}
 // Timer interrrput
 ISR(TIMER1_COMPA_vect) { // timer1 interrupt
-  m_sensors[0].average();
-  m_sensors[1].average();
-  m_sensors[2].average();
-  m_sensors[3].average();
+
+  for(int8_t i = 0; i<= 3; ++i){
+    m_sensors[i].average();
+    if(!m_sensors[i].Datacollector()){
+      m_sensors[i].dataCorrupt = true;
+    }
+  }
 }
 
 ISR(WDT_vect) {
@@ -65,12 +79,7 @@ dcmotor::dcmotor(communication &comm, uint16_t acc_const, uint16_t datafreq,
   TIMSK1 |= (1 << OCIE1A); // enable timer compare interrupt
 
   interrupts(); // allow interrupts
-  Serial.print("dataFreq: ");
-  Serial.println(m_datafreq);
-  Serial.print("accconst: ");
-  Serial.println(m_acc_const);
-  Serial.print("trgt_spd: ");
-  Serial.println(m_trgt_spd);
+
 
   delay(1000);
 }
@@ -94,19 +103,7 @@ void dcmotor::emStop() {
   digitalWrite(m_retb_pin, LOW);
 }
 
-bool dcmotor::Datacollector(){
-    uint32_t timerset = millis();
-    uint16_t data_time_change = (timerset - lastTimeData);
 
-    if (data_time_change >= m_datafreq && dataArrItt < MAXDATAINPUT) {
-        dataArr[dataArrItt] = m_sensors[1].getvalue();
-        ++dataArrItt;
-        //Serial.println(m_sensors[2].getvalue());
-        lastTimeData = timerset;
-        return true;
-    }
-    return false;
-}
 
 void dcmotor::pid() {
     uint32_t timerset = millis();
@@ -129,7 +126,7 @@ void dcmotor::pid() {
 
         analogWrite(m_has_pin, output);
         lastTimepid = timerset;
-        Datacollector();
+
     }
 }
 
@@ -167,7 +164,6 @@ void dcmotor::Accelerator() {
       cur_time = millis();
       ++pwm;
       analogWrite(m_has_pin, pwm);    }
-    Datacollector();
     if (m_sensors[1].getvalue() >= (m_trgt_spd * 7) / 8)return; // Ved tre fjerdedele af den ønsket hastighed stoppes accelerationen
     /*Serial.print("spd: ");Serial.println(m_sensors[1].getvalue());
     Serial.print("pwm: ");Serial.println(pwm);
@@ -230,4 +226,13 @@ void dcmotor::ABS(uint8_t abs_const, uint8_t abs_delay)
     } while (max >= abs_const);
 
     emStop();
+}
+
+void dcmotor::dataOut(uint16_t& itt, uint8_t arr[], uint8_t sens_num)
+{
+  itt = m_sensors[sens_num].dataArrItt;
+  for (uint16_t  i = 0; i <= itt; i++){
+    arr[i] = m_sensors[sens_num].dataArr[i];
+  }
+
 }
