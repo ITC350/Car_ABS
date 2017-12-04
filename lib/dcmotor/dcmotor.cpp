@@ -231,7 +231,7 @@ void dcmotor::ABS(uint8_t abs_const, uint8_t abs_delay)
 void dcmotor::dataOut(uint16_t& itt, uint8_t arr[], uint8_t sens_num)
 {
   itt = m_sensors[sens_num].dataArrItt;
-  for (uint16_t  i = 0; i <= itt; i++){
+  for (uint16_t  i = 0; i < itt; i++){
     arr[i] = m_sensors[sens_num].dataArr[i];
   }
 
