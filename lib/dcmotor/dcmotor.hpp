@@ -3,7 +3,7 @@
 //  Created by <author> on 18/11/2017.
 
 #pragma once
-#define MAXRUNTIME 4000
+
 //#ifndef dcmotor_hpp
 //#define dcmotor_hpp
 #include <Arduino.h>
@@ -12,6 +12,10 @@
 //#include <PID_v1.h>
 #include "sensor.hpp"
 #include "communication.hpp"
+
+#define MAX(a,b) ((a) > (b) ? (a) : (b))
+
+#define MIN(a,b) ((a) < (b) ? (a) : (b))
 
 class dcmotor {
 private:
@@ -25,9 +29,11 @@ private:
   uint16_t m_trgt_spd;
   //PID myPID;
   uint16_t m_acc_const;
-  uint16_t m_datafreq;
   uint16_t pid_sampletime = 50;
+  uint16_t lastTimepid;
   int val = 0;
+  uint16_t m_datafreq;
+
 
 public:
     dcmotor(communication &comm, uint16_t acc_const, uint16_t datafreq, uint16_t trgt_spd, double kp, double ki, double kd);
@@ -38,11 +44,7 @@ public:
     void Accelerator();
     void emStop();
     void pid();
-    void ABS();
-    uint16_t dataArr[1024] = {0};
-    uint16_t dataArrItt = 0;
+    void ABS(uint8_t abs_const, uint8_t abs_delay);
     bool detect(int sort, int hvid);
+    void dataOut(uint16_t&, uint8_t*, uint8_t);
 };
-
-
-//#endif /* dcmotor_hpp */

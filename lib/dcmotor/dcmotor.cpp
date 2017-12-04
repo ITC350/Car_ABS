@@ -7,16 +7,30 @@
 
 sensor m_sensors[4];
 
-void triggerISR1() { m_sensors[0].event(); }
-void triggerISR2() { m_sensors[1].event(); }
-void triggerISR3() { m_sensors[2].event(); }
-void triggerISR4() { m_sensors[3].event(); }
+void triggerISR1() {
+  m_sensors[0].event();
+}
+
+void triggerISR2() {
+  m_sensors[1].event();
+}
+
+void triggerISR3() {
+  m_sensors[2].event();
+}
+
+void triggerISR4() {
+  m_sensors[3].event();
+}
 // Timer interrrput
 ISR(TIMER1_COMPA_vect) { // timer1 interrupt
-  m_sensors[0].average();
-  m_sensors[1].average();
-  m_sensors[2].average();
-  m_sensors[3].average();
+
+  for(int8_t i = 0; i<= 3; ++i){
+    m_sensors[i].average();
+    if(!m_sensors[i].Datacollector()){
+      m_sensors[i].dataCorrupt = true;
+    }
+  }
 }
 
 ISR(WDT_vect) {
@@ -65,12 +79,7 @@ dcmotor::dcmotor(communication &comm, uint16_t acc_const, uint16_t datafreq,
   TIMSK1 |= (1 << OCIE1A); // enable timer compare interrupt
 
   interrupts(); // allow interrupts
-  Serial.print("dataFreq: ");
-  Serial.println(m_datafreq);
-  Serial.print("accconst: ");
-  Serial.println(m_acc_const);
-  Serial.print("trgt_spd: ");
-  Serial.println(m_trgt_spd);
+
 
   delay(1000);
 }
@@ -94,38 +103,31 @@ void dcmotor::emStop() {
   digitalWrite(m_retb_pin, LOW);
 }
 
+
+
 void dcmotor::pid() {
-  uint32_t cur_time2 = 0;
-  uint32_t timerset = millis();
-  uint16_t pid_time_change = 0;
-  double outputSum = pwm;
+    uint32_t timerset = millis();
+    uint16_t pid_time_change = (timerset - lastTimepid);
 
-  // initialize the variables we're linked to
-
-  // turn the PID on
-  // myPID.SetMode(AUTOMATIC);
-
+    double outputSum = pwm;
+    // initialize the variables we're linked to turn the PID on
+    // myPID.SetMode(AUTOMATIC);
     // if(m_comm.check_halt())emStop();
-    if (millis() - pid_time_change >= pid_sampletime) { // PID compute
+    if (pid_time_change >= pid_sampletime) { // PID compute
 
-      uint16_t input = m_sensors[1].getvalue();
-      int16_t error = m_trgt_spd - input;
-      outputSum += (m_ki * error);  // I delen udregnes
-      double output = m_kp * error; // P delen udregnes
-      output += outputSum;
-      if (output > 255)
-        output = 255; // sørger for output holder sig inden for range
-      else if (output < 0)
-        output = 0; // myPID.Compute();
-      analogWrite(m_has_pin, output);
-    }
-    if (millis() - cur_time2 >= m_datafreq) {
-      cur_time2 = millis();
-      dataArr[dataArrItt] = m_sensors[1].getvalue();
-      ++dataArrItt;
-      Serial.println(m_sensors[2].getvalue());
-    }
+        uint16_t input = m_sensors[1].getvalue();
+        int16_t error = m_trgt_spd - input;
+        outputSum += (m_ki * error);  // I delen udregnes
+        double output = m_kp * error; // P delen udregnes
+        output += outputSum;
 
+        if (output > 255)output = 255; // sørger for output holder sig inden for range
+        else if (output < 0)output = 0; // myPID.Compute();
+
+        analogWrite(m_has_pin, output);
+        lastTimepid = timerset;
+
+    }
 }
 
 
@@ -145,8 +147,7 @@ void dcmotor::Accelerator() {
   // Enter Watchdog Configuration mode:
   WDTCSR |= (1 << WDCE) | (1 << WDE);
   // Set Watchdog settings:
-  WDTCSR = (1 << WDIE) | (0 << WDE) | (1 << WDP3) | (0 << WDP2) | (0 << WDP1) |
-           (0 << WDP0); // resetter watchdog så bilen kører maks 4 sek.
+  WDTCSR = (1 << WDIE) | (0 << WDE) | (1 << WDP3) | (0 << WDP2) | (0 << WDP1) | (0 << WDP0); // resetter watchdog så bilen kører maks 4 sek.
 
   interrupts();
 
@@ -157,22 +158,13 @@ void dcmotor::Accelerator() {
   while (pwm < 255) {
     // if(m_comm.check_halt())emStop();
     // Serial.print("pwm: ");Serial.println(pwm);
-    if (millis() - cur_time >=
-        m_acc_const) { // kontroller om der er gået acc_const i ms og øger
-                       // derefter outputtet til motoren.
+    if (millis() - cur_time >= m_acc_const)
+    {
+    // kontroller om der er gået acc_const i ms og øger derefter outputtet til motoren.
       cur_time = millis();
       ++pwm;
       analogWrite(m_has_pin, pwm);    }
-    if (millis() - cur_time2 >=
-        m_datafreq) { // gemmer data i arrary med en frekvens sat i datafreq
-      cur_time2 = millis();
-      dataArr[dataArrItt] = m_sensors[1].getvalue();
-      ++dataArrItt;
-      Serial.println(m_sensors[2].getvalue());
-    }
-    if (m_sensors[1].getvalue() >= (m_trgt_spd * 7) / 8)
-      return; // Ved tre fjerdedele af den ønsket hastighed stoppes
-              // accelerationen
+    if (m_sensors[1].getvalue() >= (m_trgt_spd * 7) / 8)return; // Ved tre fjerdedele af den ønsket hastighed stoppes accelerationen
     /*Serial.print("spd: ");Serial.println(m_sensors[1].getvalue());
     Serial.print("pwm: ");Serial.println(pwm);
     delay(1000);*/
@@ -181,12 +173,66 @@ void dcmotor::Accelerator() {
 }
 
 bool dcmotor::detect(int sort, int hvid) {
+
   int border = ((sort - hvid)/2)+hvid-100;
-  val = analogRead(A1);     // read the input pin
-  if (val < border){
+  if (analogRead(A1) < border){
+      wdt_disable();
     return true;
   }
   else{
     return false;
   }
+}
+
+void dcmotor::ABS(uint8_t abs_const, uint8_t abs_delay)
+{
+    uint16_t sensor0, sensor1, sensor2, sensor3;
+
+    uint16_t min, max;
+    uint8_t _pwm = pwm / 2;
+
+    do {
+        sensor0 = m_sensors[0].getvalue();
+        sensor1 = m_sensors[1].getvalue();
+        sensor2 = m_sensors[2].getvalue();
+        sensor3 = m_sensors[3].getvalue();
+
+        _pwm = _pwm - 1;
+        Backward(_pwm);
+
+        delay(abs_delay);
+
+        min = MIN(sensor0,
+                  MIN(sensor1,
+                      MIN(sensor2,
+                             sensor3)));
+
+        max = MAX(sensor0,
+                  MAX(sensor1,
+                      MAX(sensor2,
+                             sensor3)));
+
+        if (max <= abs_const) {
+            emStop();
+        }
+
+        if (max >= min + abs_const) {
+            _pwm = _pwm - 1;
+            Forward(_pwm);
+        }
+
+        delay(abs_delay);
+
+    } while (max >= abs_const);
+
+    emStop();
+}
+
+void dcmotor::dataOut(uint16_t& itt, uint8_t arr[], uint8_t sens_num)
+{
+  itt = m_sensors[sens_num].dataArrItt;
+  for (uint16_t  i = 0; i <= itt; i++){
+    arr[i] = m_sensors[sens_num].dataArr[i];
+  }
+
 }

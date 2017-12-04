@@ -9,16 +9,16 @@
 #include "servo.hpp"
 bool state;
 //Timer interrrput
-ISR(TIMER3_COMPA_vect) { //timer3 interrupt
+/*ISR(TIMER3_COMPA_vect) { //timer3 interrupt
   digitalWrite(5, state);
   state = !state;
-}
+}*/
 
 servo::servo()  {
 
   pinMode(m_servoPin, OUTPUT);
-
-    noInterrupts();//stop interrupts
+analogWrite(m_servoPin, 32);
+/*    noInterrupts();//stop interrupts
   //Timer3 16 bit
   TCCR3A = 0;               //set entire TCCR1A register to 0
   TCCR3B = 0;               //set entire TCCR1B register to 0
@@ -30,11 +30,12 @@ servo::servo()  {
   TIMSK3 |= (1 << OCIE3A);  //enable timer compare interrupt
 
   interrupts();//allow interrupts
-
+*/
 }
 void servo::Servo_turn(uint16_t dir){
-    if(dir < 1000 && dir > 500){
+    analogWrite(m_servoPin, dir);
+    /*if(dir < 1000 && dir > 500){
         OCR3A = 62500/dir;
-    }
+    }*/
 }
 servo::~servo() {}

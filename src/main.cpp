@@ -11,24 +11,28 @@
 
 void setup() {
 
-  double Kp = 0.4, Ki = 0.005, Kd = 0; //Kp=0.4 Ki=0.005 Kd=0
-  uint16_t target_speed = 10; //10
-  uint16_t acc_const = 100;   //100
-  uint16_t data_freq = 1000;   //1000
-  bool disable_abs = true;
+    double Kp = 0.4, Ki = 0.005, Kd = 0; //Kp=0.4 Ki=0.005 Kd=0
+    uint16_t target_speed = 10; //10
+    uint16_t acc_const = 100;   //100
+    uint16_t data_freq = 1000;   //1000
+    bool disable_abs = true;
 
-  servo myServo;
-  communication comm(Serial);
-  //comm.receive();
-  dcmotor motor(comm, acc_const, data_freq, target_speed, Kp, Ki, Kd);
+    servo myServo;
+    communication comm(Serial);
+    //comm.receive();
+    dcmotor motor(comm, acc_const, data_freq, target_speed, Kp, Ki, Kd);
 
-  myServo.Servo_turn(647);
-  delay(2000);
-  while (motor.detect(850, 50) == false) {
-    motor.Forward(50);
-    /* code */
-  }
-  motor.emStop();
+    myServo.Servo_turn(255);
+    delay(2000);
+    motor.Accelerator();
+    while (!motor.detect(850, 50)) {
+        motor.pid();
+    }
+    //motor.ABS(uint8_t abs_const);
+    while(!digitalRead(51));
+    
+
+  //motor.emStop();
 
   //motor.Accelerator();
   //motor.pid();
