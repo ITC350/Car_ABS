@@ -16,8 +16,7 @@ uint16_t sensor::getvalue() {
 bool sensor::Datacollector(){
 
     if (dataArrItt < MAXDATAINPUT) {
-        dataArr[dataArrItt] = getvalue();
-        ++dataArrItt;
+        dataArr[dataArrItt++] = getvalue();
         //Serial.println(m_sensors[2].getvalue());
         return true;
     }
