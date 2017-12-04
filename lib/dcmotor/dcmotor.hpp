@@ -42,7 +42,7 @@ public:
     void Backward(uint8_t bwd_speed);
     void Accelerator();
     void emStop();
-    void pid();
+    bool pid();
     void ABS(uint8_t abs_const, uint8_t abs_delay);
     bool detect(int border);
     uint8_t *dataOut(uint8_t);

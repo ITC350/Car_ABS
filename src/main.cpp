@@ -27,7 +27,7 @@ void setup() {
     motor.ittReset();
     motor.Accelerator();
     while (!motor.detect(150)) {
-        motor.pid();
+        if(!motor.pid())break;
     }
     motor.emStop();
     //motor.ABS(uint8_t abs_const);

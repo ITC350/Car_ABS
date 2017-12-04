@@ -105,7 +105,7 @@ void dcmotor::emStop() {
 
 
 
-void dcmotor::pid() {
+bool dcmotor::pid() {
     uint32_t timerset = millis();
     uint16_t pid_time_change = (timerset - lastTimepid);
 
@@ -113,6 +113,7 @@ void dcmotor::pid() {
     // initialize the variables we're linked to turn the PID on
     // myPID.SetMode(AUTOMATIC);
     // if(m_comm.check_halt())emStop();
+    if(m_sensors[3] < 1)return false;
     if (pid_time_change >= pid_sampletime) { // PID compute
 
         uint16_t input = m_sensors[3].getvalue();
@@ -126,10 +127,9 @@ void dcmotor::pid() {
 
         analogWrite(m_has_pin, output);
         lastTimepid = timerset;
-
+        return true;
     }
 }
-
 
 void dcmotor::Accelerator() {
   /*Sørger for at bilen kan accelerrere langsomt op så hjulspind kan undgåes*/
