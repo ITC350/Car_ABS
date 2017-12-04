@@ -34,7 +34,6 @@ private:
   int val = 0;
   uint16_t m_datafreq;
 
-
 public:
     dcmotor(communication &comm, uint16_t acc_const, uint16_t datafreq, uint16_t trgt_spd, double kp, double ki, double kd);
     ~dcmotor();
@@ -46,5 +45,5 @@ public:
     void pid();
     void ABS(uint8_t abs_const, uint8_t abs_delay);
     bool detect(int sort, int hvid);
-    uint16_t dataOut(uint16_t&, uint8_t*, uint8_t);
+    uint8_t *dataOut(uint8_t);
 };
