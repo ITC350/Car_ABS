@@ -10,7 +10,7 @@
 
 
 void setup() {
-
+    pinMode(41,INPUT_PULLUP);
     double Kp = 0.4, Ki = 0.005, Kd = 0; //Kp=0.4 Ki=0.005 Kd=0
     uint16_t target_speed = 10; //10
     uint16_t acc_const = 100;   //100
@@ -29,7 +29,7 @@ void setup() {
         motor.pid();
     }
     //motor.ABS(uint8_t abs_const);
-    while(!digitalRead(41));
+    while(digitalRead(41));
 
     comm.serial_printout(motor.dataOut(0), motor.dataOut(1),
                          motor.dataOut(2), motor.dataOut(3));
