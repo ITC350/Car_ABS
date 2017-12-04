@@ -22,6 +22,6 @@ public:
     uint16_t getvalue();
     bool Datacollector();
     bool dataCorrupt;
-    uint8_t dataArr[MAXDATAINPUT]={0};
-    uint16_t dataArrItt = 0;
+    volatile uint8_t dataArr[MAXDATAINPUT]={0};
+    volatile uint16_t dataArrItt = 0;
 };

@@ -244,3 +244,9 @@ uint8_t *dcmotor::dataOut(uint8_t sens_num)
   */
 
 }
+
+void dcmotor::ittReset(){
+    for(int i = 0; i < 4;++i){
+        m_sensors[i].dataArrItt = 0;
+    }
+}
