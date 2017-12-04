@@ -29,7 +29,7 @@ void setup() {
         motor.pid();
     }
     //motor.ABS(uint8_t abs_const);
-    while(digitalRead(41));
+    while(digitalRead(41)) {Serial.print(digitalRead(41));};
 
     comm.serial_printout(motor.dataOut(0), motor.dataOut(1),
                          motor.dataOut(2), motor.dataOut(3));
