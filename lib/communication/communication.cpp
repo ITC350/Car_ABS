@@ -77,7 +77,7 @@ void communication::serial_printout(uint8_t dataSens1[], uint8_t dataSens2[], ui
 {
   uint16_t datTime = 0;
     for (uint16_t i = 0; i < MAXDATAINPUT; i++) {
-      datTime += 50;
+      datTime += 20;
       Serial.print(datTime);Serial.print(",");Serial.print((int)dataSens1[i]);Serial.print(",");Serial.print((int)dataSens2[i]);Serial.print(",");Serial.print((int)dataSens3[i]);Serial.print(",");Serial.println((int)dataSens4[i]);
     }
 }
