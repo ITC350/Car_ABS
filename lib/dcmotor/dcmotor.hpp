@@ -22,7 +22,7 @@ private:
   const uint8_t m_has_pin=10;
   const uint8_t m_reta_pin=11;
   const uint8_t m_retb_pin=12;
-  uint8_t pwm = 20;
+  uint8_t pwm = 25;
   communication m_comm;
   double m_kp, m_ki, m_kd;
   //double Kp=2, Ki=0, Kd=0;

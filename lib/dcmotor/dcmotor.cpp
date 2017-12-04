@@ -115,7 +115,7 @@ void dcmotor::pid() {
     // if(m_comm.check_halt())emStop();
     if (pid_time_change >= pid_sampletime) { // PID compute
 
-        uint16_t input = m_sensors[1].getvalue();
+        uint16_t input = m_sensors[3].getvalue();
         int16_t error = m_trgt_spd - input;
         outputSum += (m_ki * error);  // I delen udregnes
         double output = m_kp * error; // P delen udregnes
@@ -164,7 +164,7 @@ void dcmotor::Accelerator() {
       cur_time = millis();
       ++pwm;
       analogWrite(m_has_pin, pwm);    }
-    if (m_sensors[1].getvalue() >= (m_trgt_spd * 7) / 8)return; // Ved tre fjerdedele af den ønsket hastighed stoppes accelerationen
+    if (m_sensors[0].getvalue() >= (m_trgt_spd * 7) / 8 || m_sensors[1].getvalue() >= (m_trgt_spd * 7) / 8 || m_sensors[2].getvalue() >= (m_trgt_spd * 7) / 8 || m_sensors[3].getvalue() >= (m_trgt_spd * 7) / 8)return; // Ved tre fjerdedele af den ønsket hastighed stoppes accelerationen
     /*Serial.print("spd: ");Serial.println(m_sensors[1].getvalue());
     Serial.print("pwm: ");Serial.println(pwm);
     delay(1000);*/

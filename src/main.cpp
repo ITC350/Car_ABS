@@ -13,7 +13,7 @@ void setup() {
     pinMode(41,INPUT_PULLUP);
     double Kp = 0.4, Ki = 0.005, Kd = 0; //Kp=0.4 Ki=0.005 Kd=0
     uint16_t target_speed = 10; //10
-    uint16_t acc_const = 100;   //100
+    uint16_t acc_const = 25;   //100
     uint16_t data_freq = 1000;   //1000
     bool disable_abs = true;
 
@@ -22,7 +22,7 @@ void setup() {
     //comm.receive();
     dcmotor motor(comm, acc_const, data_freq, target_speed, Kp, Ki, Kd);
 
-    myServo.Servo_turn(255);
+    myServo.Servo_turn(215);
     delay(2000);
     motor.ittReset();
     motor.Accelerator();

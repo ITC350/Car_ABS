@@ -17,7 +17,7 @@ bool state;
 servo::servo()  {
 
   pinMode(m_servoPin, OUTPUT);
-analogWrite(m_servoPin, 32);
+analogWrite(m_servoPin, 127);
 /*    noInterrupts();//stop interrupts
   //Timer3 16 bit
   TCCR3A = 0;               //set entire TCCR1A register to 0
