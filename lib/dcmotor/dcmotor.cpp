@@ -216,6 +216,8 @@ void dcmotor::ABS(uint8_t abs_const, uint8_t abs_delay)
             emStop();
         }
 
+        delay(abs_delay);
+
         if (max >= min + abs_const) {
             _pwm = _pwm - 1;
             Forward(_pwm);
@@ -223,7 +225,7 @@ void dcmotor::ABS(uint8_t abs_const, uint8_t abs_delay)
 
         delay(abs_delay);
 
-    } while (max >= abs_const);
+    } while (max >= abs_const && _pwm >= 2);
 
     emStop();
 }
