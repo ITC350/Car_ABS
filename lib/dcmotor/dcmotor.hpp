@@ -44,7 +44,7 @@ public:
     void emStop();
     void pid();
     void ABS(uint8_t abs_const, uint8_t abs_delay);
-    bool detect(int sort, int hvid);
+    bool detect(int border);
     uint8_t *dataOut(uint8_t);
     void ittReset();
 };

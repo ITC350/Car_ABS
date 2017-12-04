@@ -172,9 +172,7 @@ void dcmotor::Accelerator() {
   return;
 }
 
-bool dcmotor::detect(int sort, int hvid) {
-
-  int border = ((sort - hvid)/2)+hvid-100;
+bool dcmotor::detect(int border) {
   if (analogRead(A1) < border){
       wdt_disable();
     return true;

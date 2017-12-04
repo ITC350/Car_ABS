@@ -26,7 +26,7 @@ void setup() {
     delay(2000);
     motor.ittReset();
     motor.Accelerator();
-    while (!motor.detect(850, 50)) {
+    while (!motor.detect(150)) {
         motor.pid();
     }
     motor.emStop();
