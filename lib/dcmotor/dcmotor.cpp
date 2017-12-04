@@ -113,9 +113,9 @@ bool dcmotor::pid() {
     // initialize the variables we're linked to turn the PID on
     // myPID.SetMode(AUTOMATIC);
     // if(m_comm.check_halt())emStop();
-    if(m_sensors[3] < 1)return false;
-    if (pid_time_change >= pid_sampletime) { // PID compute
 
+    if (pid_time_change >= pid_sampletime) { // PID compute
+        if(m_sensors[3].getvalue() < 1)return false;
         uint16_t input = m_sensors[3].getvalue();
         int16_t error = m_trgt_spd - input;
         outputSum += (m_ki * error);  // I delen udregnes
