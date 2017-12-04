@@ -45,5 +45,5 @@ public:
     void pid();
     void ABS(uint8_t abs_const, uint8_t abs_delay);
     bool detect(int sort, int hvid);
-    void dataOut(uint16_t&, uint8_t*, uint8_t);
+    uint16_t dataOut(uint16_t&, uint8_t*, uint8_t);
 };
