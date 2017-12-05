@@ -73,11 +73,11 @@ void communication::send(uint8_t *msg, size_t length)
     m_serial.write(msg, length);
 }
 
-void communication::serial_printout(uint8_t dataSens1[], uint8_t dataSens2[], uint8_t dataSens3[], uint8_t dataSens4[])
+void communication::serial_printout(uint16_t *dataSens1, uint16_t *dataSens2, uint16_t *dataSens3, uint16_t *dataSens4)
 {
   uint16_t datTime = 0;
     for (uint16_t i = 0; i < MAXDATAINPUT; i++) {
       datTime += 20;
-      Serial.print(datTime);Serial.print(",");Serial.print((int)dataSens1[i]);Serial.print(",");Serial.print((int)dataSens2[i]);Serial.print(",");Serial.print((int)dataSens3[i]);Serial.print(",");Serial.println((int)dataSens4[i]);
+      Serial.print(datTime);Serial.print(",");Serial.print((int)dataSens1);Serial.print(",");Serial.print((int)dataSens2);Serial.print(",");Serial.print((int)dataSens3);Serial.print(",");Serial.println((int)dataSens4);
     }
 }

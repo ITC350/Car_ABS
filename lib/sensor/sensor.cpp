@@ -6,7 +6,7 @@ void sensor::event() {
 
 void sensor::average() {
     value = counter;
-    counter = 0;
+    //counter = 0;
 }
 
 uint16_t sensor::getvalue() {

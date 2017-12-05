@@ -22,19 +22,19 @@ void setup() {
     //comm.receive();
     dcmotor motor(comm, acc_const, data_freq, target_speed, Kp, Ki, Kd);
 
-    myServo.Servo_turn(215);
-    delay(2000);
-    motor.ittReset();
-    motor.Accelerator();
-    while (!motor.detect(150)) {
-        if(!motor.pid())break;
-    }
+    //myServo.Servo_turn(215);
+    //delay(2000);
+    //motor.ittReset();
+    //motor.Accelerator();
+    //while (!motor.detect(150)) {
+    //    if(!motor.pid())break;
+    //}
     motor.emStop();
     //motor.ABS(uint8_t abs_const);
     while(digitalRead(41));
 
-    comm.serial_printout(motor.dataOut(0), motor.dataOut(1),
-                         motor.dataOut(2), motor.dataOut(3));
+    //Serial.print(motordataOut(1))
+    comm.serial_printout(motor.dataOut(0), motor.dataOut(1), motor.dataOut(2), motor.dataOut(3));
 
   //motor.emStop();
 

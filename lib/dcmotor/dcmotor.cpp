@@ -59,13 +59,13 @@ dcmotor::dcmotor(communication &comm, uint16_t acc_const, uint16_t datafreq,
   pinMode(3, INPUT);
   pinMode(A1, INPUT);
   attachInterrupt(digitalPinToInterrupt(18), triggerISR1,
-                  HIGH); // attach interrupt
+                  CHANGE); // attach interrupt
   attachInterrupt(digitalPinToInterrupt(19), triggerISR2,
-                  HIGH); // attach interrupt
+                  CHANGE); // attach interrupt
   attachInterrupt(digitalPinToInterrupt(2), triggerISR3,
-                  HIGH); // attach interrupt
+                  CHANGE); // attach interrupt
   attachInterrupt(digitalPinToInterrupt(3), triggerISR4,
-                  HIGH); // attach interrupt
+                  CHANGE); // attach interrupt
 
   noInterrupts(); // stop interrupts
   // Timer1 16 bit
@@ -228,10 +228,19 @@ void dcmotor::ABS(uint8_t abs_const, uint8_t abs_delay)
     emStop();
 }
 
-uint8_t *dcmotor::dataOut(uint8_t sens_num)
+
+void dcmotor::ABS2(){
+    for(int i = 25; i < 255; ++i){
+        if(m_sensors[0].getvalue() == 0 || m_sensors[1].getvalue() == 0 || m_sensors[2].getvalue() == 0 || m_sensors[3].getvalue() == 0){
+
+        }
+    }
+}
+
+uint16_t *dcmotor::dataOut(uint8_t sens_num)
 {
 
-  return m_sensors[sens_num].dataArr;
+  return m_sensors[sens_num].getvalue();
 
   /*
   itt = m_sensors[sens_num].dataArrItt;

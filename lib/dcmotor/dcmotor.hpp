@@ -44,7 +44,8 @@ public:
     void emStop();
     bool pid();
     void ABS(uint8_t abs_const, uint8_t abs_delay);
+    void ABS2();
     bool detect(int border);
-    uint8_t *dataOut(uint8_t);
+    uint16_t *dataOut(uint8_t);
     void ittReset();
 };
