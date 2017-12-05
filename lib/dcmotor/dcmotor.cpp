@@ -153,7 +153,6 @@ void dcmotor::Accelerator() {
 
   Forward(pwm);
   uint32_t cur_time = 0;
-  uint32_t cur_time2 = 0;
 
   while (pwm < 255) {
     // if(m_comm.check_halt())emStop();
@@ -227,6 +226,62 @@ void dcmotor::ABS(uint8_t abs_const, uint8_t abs_delay)
 
     emStop();
 }
+
+void dcmotor::ABS2(uint8_t interval, uint8_t int_incre, uint8_t null_time){
+  pwm = 1;
+  Backward(pwm);
+  uint8_t abs_speed[4];
+  bool first_run = true;
+  bool null_speed = false;
+  bool higher_speed = false;
+  uint16_t null_speed_timer = 0;
+  uint32_t cur_time = 0;
+  for(int i = 0; i < 4; ++i){
+     abs_speed[i] = m_sensors[i].getvalue();
+  }
+
+  while (1) {
+    if (millis() - cur_time >= interval){     //Sets the interval, the abs will run in
+      for(int i = 0; i < 4; ++i){
+        if(abs_speed[i] = 0){                //Checks if the wheels stand still
+          null_speed = true;
+          first_run = false;
+        }else{
+          null_speed = false;
+          null_speed_timer = 0;
+        }
+        if(abs_speed[i] > m_sensors[i].getvalue()){ //Checks if the wheels spins faster than the last run, this chan be wheelspin
+          higher_speed = true;
+          first_run = false;
+        }else{
+          higher_speed = false;
+        }
+      }
+
+      if(null_speed || higher_speed){             //if any of the checks before is true the breaking will stop
+        emStop();
+        if(!null_speed_timer && null_speed){
+          null_speed_timer = millis();
+        }
+      }else{
+        if(first_run){
+          pwm += int_incre;
+          Backward(pwm);
+        }else{
+          pwm++;
+          Backward(pwm);
+        }
+      }
+      if (millis() - null_speed_timer >= null_time) {   //If the wheel has stood still more than a given time the function will return
+        return;
+      }
+      for(int i = 0; i < 4; ++i){
+         abs_speed[i] = m_sensors[i].getvalue();
+      }
+    }
+  }
+}
+
 
 uint8_t *dcmotor::dataOut(uint8_t sens_num)
 {
