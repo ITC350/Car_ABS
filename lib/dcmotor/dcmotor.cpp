@@ -241,7 +241,7 @@ void dcmotor::ABS2(uint8_t interval, uint8_t int_incre, uint8_t null_time){
   bool first_run = true;                //kontrol for om abs har været aktiveret
   bool null_speed = false;              //Er true hvis hjulene står stille
   bool higher_speed = false;            //Er true hvis hjulene spinner
-  uint16_t null_speed_timer = 0;
+  uint32_t null_speed_timer = 0;
   uint32_t cur_time = 0;
   bool break_on = true;
   for(int i = 0; i < 4; ++i){
