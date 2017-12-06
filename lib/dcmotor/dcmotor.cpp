@@ -122,7 +122,7 @@ bool dcmotor::pid() {
         }
         uint16_t input = m_sensors[3].getvalue();
         int16_t error = m_trgt_spd - input;
-        outputSum += (m_ki * error);  // I delen udregnes
+        outputSum += (m_ki * pid_sampletime * error);  // I delen udregnes
         double output = m_kp * error; // P delen udregnes
         output += outputSum;
 
@@ -251,9 +251,10 @@ void dcmotor::ABS2(uint8_t interval, uint8_t int_incre, uint8_t null_time){
   while (1) {
     if (millis() - cur_time >= interval){     //Sets the interval, the abs will run in
       for(int i = 0; i < 4; ++i){
-        if(abs_speed[i] == 0){                //Checks if the wheels stand still
+        if(abs_speed[i] <= 1){                //Checks if the wheels stand still
           null_speed = true;
           first_run = false;
+          break;
         }else{
           null_speed = false;
           null_speed_timer = 0;
@@ -261,6 +262,7 @@ void dcmotor::ABS2(uint8_t interval, uint8_t int_incre, uint8_t null_time){
         if(abs_speed[i] > (m_sensors[i].getvalue() + 1) && break_on){ //Checks if the wheels spins faster than the last run, this chan be wheelspin
           higher_speed = true;
           first_run = false;
+          break;
         }else{
           higher_speed = false;
         }
@@ -278,7 +280,6 @@ void dcmotor::ABS2(uint8_t interval, uint8_t int_incre, uint8_t null_time){
           Backward(pwm);
         }else{
           break_on = true;
-          pwm++;
           Backward(pwm);
         }
       }

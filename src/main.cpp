@@ -11,7 +11,7 @@
 
 void setup() {
     pinMode(41,INPUT_PULLUP);
-    double Kp = 0.4, Ki = 0.005, Kd = 0; //Kp=0.4 Ki=0.005 Kd=0
+    double Kp = 0.4, Ki = 0.0001, Kd = 0; //Kp=0.4 Ki=0.005 Kd=0
     uint16_t target_speed = 10; //10
     uint16_t acc_const = 40;   //100
     uint16_t data_freq = 1000;   //1000
