@@ -28,7 +28,7 @@ ISR(TIMER1_COMPA_vect) { // timer1 interrupt
   for(int8_t i = 0; i<= 3; ++i){
     m_sensors[i].average();
     if(!m_sensors[i].Datacollector()){
-      m_sensors[i].dataCorrupt = true;
+      ++m_sensors[i].dataCorrupt;
     }
   }
 }
@@ -106,6 +106,7 @@ void dcmotor::emStop() {
 
 
 bool dcmotor::pid() {
+    state[m_sensors[1].dataArrItt] = 1;
     uint32_t timerset = millis();
     uint16_t pid_time_change = (timerset - lastTimepid);
 
@@ -115,7 +116,10 @@ bool dcmotor::pid() {
     // if(m_comm.check_halt())emStop();
 
     if (pid_time_change >= pid_sampletime) { // PID compute
-        if(m_sensors[3].getvalue() < 1)return false;
+        if(m_sensors[3].getvalue() <= 1){
+            state[2] = 2;
+            return false;
+        }
         uint16_t input = m_sensors[3].getvalue();
         int16_t error = m_trgt_spd - input;
         outputSum += (m_ki * error);  // I delen udregnes
@@ -173,7 +177,8 @@ void dcmotor::Accelerator() {
 
 bool dcmotor::detect(int border) {
   if (analogRead(A1) < border){
-      wdt_disable();
+    wdt_disable();
+    state[m_sensors[1].dataArrItt] = 4;
     return true;
   }
   else{
@@ -183,6 +188,7 @@ bool dcmotor::detect(int border) {
 
 void dcmotor::ABS(uint8_t abs_const, uint8_t abs_delay)
 {
+    state[m_sensors[1].dataArrItt] = 2;
     uint16_t sensor0, sensor1, sensor2, sensor3;
 
     uint16_t min, max;
@@ -228,14 +234,16 @@ void dcmotor::ABS(uint8_t abs_const, uint8_t abs_delay)
 }
 
 void dcmotor::ABS2(uint8_t interval, uint8_t int_incre, uint8_t null_time){
+  state[m_sensors[1].dataArrItt] = 2;
   pwm = 1;
   Backward(pwm);
   uint8_t abs_speed[4];
-  bool first_run = true;
-  bool null_speed = false;
-  bool higher_speed = false;
+  bool first_run = true;                //kontrol for om abs har været aktiveret
+  bool null_speed = false;              //Er true hvis hjulene står stille
+  bool higher_speed = false;            //Er true hvis hjulene spinner
   uint16_t null_speed_timer = 0;
   uint32_t cur_time = 0;
+  bool break_on = true;
   for(int i = 0; i < 4; ++i){
      abs_speed[i] = m_sensors[i].getvalue();
   }
@@ -243,14 +251,14 @@ void dcmotor::ABS2(uint8_t interval, uint8_t int_incre, uint8_t null_time){
   while (1) {
     if (millis() - cur_time >= interval){     //Sets the interval, the abs will run in
       for(int i = 0; i < 4; ++i){
-        if(abs_speed[i] = 0){                //Checks if the wheels stand still
+        if(abs_speed[i] == 0){                //Checks if the wheels stand still
           null_speed = true;
           first_run = false;
         }else{
           null_speed = false;
           null_speed_timer = 0;
         }
-        if(abs_speed[i] > m_sensors[i].getvalue()){ //Checks if the wheels spins faster than the last run, this chan be wheelspin
+        if(abs_speed[i] > (m_sensors[i].getvalue() + 1) && break_on){ //Checks if the wheels spins faster than the last run, this chan be wheelspin
           higher_speed = true;
           first_run = false;
         }else{
@@ -260,6 +268,7 @@ void dcmotor::ABS2(uint8_t interval, uint8_t int_incre, uint8_t null_time){
 
       if(null_speed || higher_speed){             //if any of the checks before is true the breaking will stop
         emStop();
+        break_on = false;
         if(!null_speed_timer && null_speed){
           null_speed_timer = millis();
         }
@@ -268,11 +277,14 @@ void dcmotor::ABS2(uint8_t interval, uint8_t int_incre, uint8_t null_time){
           pwm += int_incre;
           Backward(pwm);
         }else{
+          break_on = true;
           pwm++;
           Backward(pwm);
         }
       }
+      if(pwm > 255)pwm=255;
       if (millis() - null_speed_timer >= null_time) {   //If the wheel has stood still more than a given time the function will return
+        state[m_sensors[1].dataArrItt] = 3;
         return;
       }
       for(int i = 0; i < 4; ++i){
@@ -296,6 +308,15 @@ uint8_t *dcmotor::dataOut(uint8_t sens_num)
 
   */
 
+}
+
+uint16_t *dcmotor::stateOut(){
+    for(int i = 0; i < 4; ++i){
+        if(m_sensors[i].dataCorrupt){
+        state[m_sensors[i].dataArrItt - i] = m_sensors[i].dataCorrupt;
+        }
+    }
+    return state;
 }
 
 void dcmotor::ittReset(){

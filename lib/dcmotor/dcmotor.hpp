@@ -17,6 +17,10 @@
 
 #define MIN(a,b) ((a) < (b) ? (a) : (b))
 
+#ifndef MAXDATAINPUT
+  #define MAXDATAINPUT 1024
+#endif
+
 class dcmotor {
 private:
   const uint8_t m_has_pin=10;
@@ -33,11 +37,11 @@ private:
   uint16_t lastTimepid;
   int val = 0;
   uint16_t m_datafreq;
+  uint16_t state[MAXDATAINPUT] = {0};
 
 public:
     dcmotor(communication &comm, uint16_t acc_const, uint16_t datafreq, uint16_t trgt_spd, double kp, double ki, double kd);
     ~dcmotor();
-    bool Datacollector();
     void Forward(uint8_t fwd_speed);
     void Backward(uint8_t bwd_speed);
     void Accelerator();
@@ -48,4 +52,5 @@ public:
     bool detect(int border);
     uint8_t *dataOut(uint8_t);
     void ittReset();
+    uint16_t *stateOut();
 };

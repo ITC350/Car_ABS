@@ -13,7 +13,7 @@ void setup() {
     pinMode(41,INPUT_PULLUP);
     double Kp = 0.4, Ki = 0.005, Kd = 0; //Kp=0.4 Ki=0.005 Kd=0
     uint16_t target_speed = 10; //10
-    uint16_t acc_const = 25;   //100
+    uint16_t acc_const = 40;   //100
     uint16_t data_freq = 1000;   //1000
     bool disable_abs = true;
 
@@ -22,19 +22,21 @@ void setup() {
     //comm.receive();
     dcmotor motor(comm, acc_const, data_freq, target_speed, Kp, Ki, Kd);
 
-    myServo.Servo_turn(215);
+    myServo.Servo_turn(203);
     delay(2000);
     motor.ittReset();
     motor.Accelerator();
     while (!motor.detect(150)) {
         if(!motor.pid())break;
     }
-    motor.emStop();
+
+    motor.ABS2(20,1,100);
     //motor.ABS(uint8_t abs_const);
     while(digitalRead(41));
 
     comm.serial_printout(motor.dataOut(0), motor.dataOut(1),
-                         motor.dataOut(2), motor.dataOut(3));
+                         motor.dataOut(2), motor.dataOut(3),
+                         motor.stateOut());
 
   //motor.emStop();
 

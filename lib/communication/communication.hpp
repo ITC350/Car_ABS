@@ -23,5 +23,5 @@ public:
     void receive();
     void send(uint8_t *msg, size_t length);
     bool check_halt();
-    void serial_printout(uint8_t*, uint8_t*, uint8_t*, uint8_t*);
+    void serial_printout(uint8_t*, uint8_t*, uint8_t*, uint8_t*, uint16_t*);
 };
