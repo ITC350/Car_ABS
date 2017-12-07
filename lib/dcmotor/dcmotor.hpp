@@ -33,12 +33,13 @@ private:
   uint16_t m_trgt_spd;
   //PID myPID;
   uint16_t m_acc_const;
-  uint16_t pid_sampletime = 50;
+  uint16_t pid_sampletime = 100;
   uint16_t lastTimepid;
   int val = 0;
   uint16_t m_datafreq;
   uint16_t state[MAXDATAINPUT] = {0};
-
+  uint16_t abs_slip_count = 0;
+  uint16_t abs_spin_count = 0;
 public:
     dcmotor(communication &comm, uint16_t acc_const, uint16_t datafreq, uint16_t trgt_spd, double kp, double ki, double kd);
     ~dcmotor();

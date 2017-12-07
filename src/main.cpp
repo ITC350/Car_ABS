@@ -30,12 +30,13 @@ void setup() {
         if(!motor.pid())break;
     }
 
+
     //motor.emStop();
     //motor.Backward(20);
     //motor.Forward(10);
     //while(!motor.detect(150));
     //motor.emStop();
-    motor.ABS2(20,1,1000);
+    motor.ABS2(67,3,500);
     //motor.ABS(uint8_t abs_const);
     while(digitalRead(41));
 
