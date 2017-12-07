@@ -137,9 +137,9 @@ bool dcmotor::pid() {
 
 void dcmotor::Accelerator() {
   /*Sørger for at bilen kan accelerrere langsomt op så hjulspind kan undgåes*/
-  noInterrupts(); // Watchdog initialiceres
+  /*noInterrupts(); // Watchdog initialiceres
   wdt_reset();    // reset the WDT timer
-  /*
+
   WDTCSR configuration:
   WDIE = 1: Interrupt Enable
   WDE = 0 :Reset Disable
@@ -147,14 +147,14 @@ void dcmotor::Accelerator() {
   WDP2 = 0 :For 4000ms Time-out
   WDP1 = 0 :For 4000ms Time-out
   WDP0 = 0 :For 4000ms Time-out
-  */
+
   // Enter Watchdog Configuration mode:
   WDTCSR |= (1 << WDCE) | (1 << WDE);
   // Set Watchdog settings:
   WDTCSR = (1 << WDIE) | (0 << WDE) | (1 << WDP3) | (0 << WDP2) | (0 << WDP1) | (0 << WDP0); // resetter watchdog så bilen kører maks 4 sek.
 
   interrupts();
-
+*/
   Forward(pwm);
   uint32_t cur_time = 0;
 
@@ -241,7 +241,7 @@ void dcmotor::ABS2(uint8_t interval, uint8_t int_incre, uint8_t null_time){
   bool first_run = true;                //kontrol for om abs har været aktiveret
   bool null_speed = false;              //Er true hvis hjulene står stille
   bool higher_speed = false;            //Er true hvis hjulene spinner
-  uint32_t null_speed_timer = 0;
+  uint32_t null_speed_timer[4] = {0};
   uint32_t cur_time = 0;
   bool break_on = true;
   for(int i = 0; i < 4; ++i){
@@ -250,14 +250,15 @@ void dcmotor::ABS2(uint8_t interval, uint8_t int_incre, uint8_t null_time){
 
   while (1) {
     if (millis() - cur_time >= interval){     //Sets the interval, the abs will run in
+        cur_time = millis();
       for(int i = 0; i < 4; ++i){
-        if(abs_speed[i] <= 1){                //Checks if the wheels stand still
+        if(abs_speed[i] == 0){                //Checks if the wheels stand still
           null_speed = true;
           first_run = false;
           break;
         }else{
           null_speed = false;
-          null_speed_timer = 0;
+          null_speed_timer[i] = 0;
         }
         if(abs_speed[i] > (m_sensors[i].getvalue() + 1) && break_on){ //Checks if the wheels spins faster than the last run, this chan be wheelspin
           higher_speed = true;
@@ -271,8 +272,10 @@ void dcmotor::ABS2(uint8_t interval, uint8_t int_incre, uint8_t null_time){
       if(null_speed || higher_speed){             //if any of the checks before is true the breaking will stop
         emStop();
         break_on = false;
-        if(!null_speed_timer && null_speed){
-          null_speed_timer = millis();
+        for(int i = 0; i < 4; ++i){
+            if(!null_speed_timer[i] && null_speed){
+                null_speed_timer[i] = millis();
+            }
         }
       }else{
         if(first_run){
@@ -284,11 +287,13 @@ void dcmotor::ABS2(uint8_t interval, uint8_t int_incre, uint8_t null_time){
         }
       }
       if(pwm > 255)pwm=255;
-      if (millis() - null_speed_timer >= null_time) {   //If the wheel has stood still more than a given time the function will return
-        state[m_sensors[1].dataArrItt] = 3;
-        return;
-      }
+
       for(int i = 0; i < 4; ++i){
+        if (millis() - null_speed_timer[i] >= null_time && null_speed) {   //If the wheel has stood still more than a given time the function will return
+            state[m_sensors[1].dataArrItt] = 3;
+            emStop();
+            return;
+        }
          abs_speed[i] = m_sensors[i].getvalue();
       }
     }
