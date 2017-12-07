@@ -30,7 +30,7 @@ void setup() {
         if(!motor.pid())break;
     }
 
-    motor.ABS2(20,1,100);
+    motor.ABS2(67,3,500);
     //motor.ABS(uint8_t abs_const);
     while(digitalRead(41));
 

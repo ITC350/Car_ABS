@@ -33,7 +33,7 @@ private:
   uint16_t m_trgt_spd;
   //PID myPID;
   uint16_t m_acc_const;
-  uint16_t pid_sampletime = 50;
+  uint16_t pid_sampletime = 100;
   uint16_t lastTimepid;
   int val = 0;
   uint16_t m_datafreq;
