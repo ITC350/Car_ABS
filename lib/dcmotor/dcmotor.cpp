@@ -280,13 +280,14 @@ void dcmotor::ABS2(uint8_t interval, uint8_t int_incre, uint8_t null_time){
       }else{
         if(first_run){
           pwm += int_incre;
+          if(pwm > 255)pwm=255;
           Backward(pwm);
         }else{
           break_on = true;
           Backward(pwm);
         }
       }
-      if(pwm > 255)pwm=255;
+
 
       for(int i = 0; i < 4; ++i){
         if (millis() - null_speed_timer[i] >= null_time && null_speed) {   //If the wheel has stood still more than a given time the function will return
