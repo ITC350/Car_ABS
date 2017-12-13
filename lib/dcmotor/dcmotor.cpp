@@ -39,11 +39,11 @@ ISR(WDT_vect) {
   digitalWrite(12, LOW);
 }
 
-dcmotor::dcmotor(communication &comm, uint16_t acc_const, uint16_t datafreq,
+dcmotor::dcmotor(uint16_t acc_const,
                  uint16_t trgt_spd, double kp, double ki, double kd)
-    : m_comm(comm), m_trgt_spd(trgt_spd), m_kp(kp), m_ki(ki), m_kd(kd),
+    :  m_trgt_spd(trgt_spd), m_kp(kp), m_ki(ki), m_kd(kd),
       // myPID(&Input, &Output, &m_trgt_spd, kp, ki, kd, DIRECT),
-      m_datafreq(datafreq), m_acc_const(acc_const) {
+       m_acc_const(acc_const) {
 
   if (m_trgt_spd > 26)
     m_trgt_spd = 26;

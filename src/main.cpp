@@ -20,7 +20,7 @@ void setup() {
     servo myServo;
     communication comm(Serial);
     //comm.receive();
-    dcmotor motor(comm, acc_const, data_freq, target_speed, Kp, Ki, Kd);
+    dcmotor motor(acc_const, target_speed, Kp, Ki, Kd);
 
     myServo.Servo_turn(201);
     delay(2000);

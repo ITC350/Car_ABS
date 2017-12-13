@@ -27,7 +27,6 @@ private:
   const uint8_t m_reta_pin=11;
   const uint8_t m_retb_pin=12;
   uint8_t pwm = 30;
-  communication m_comm;
   double m_kp, m_ki, m_kd;
   //double Kp=2, Ki=0, Kd=0;
   uint16_t m_trgt_spd;
@@ -36,12 +35,11 @@ private:
   uint16_t pid_sampletime = 100;
   uint16_t lastTimepid;
   int val = 0;
-  uint16_t m_datafreq;
   uint16_t state[MAXDATAINPUT] = {0};
   uint16_t abs_slip_count = 0;
   uint16_t abs_spin_count = 0;
 public:
-    dcmotor(communication &comm, uint16_t acc_const, uint16_t datafreq, uint16_t trgt_spd, double kp, double ki, double kd);
+    dcmotor(uint16_t acc_const, uint16_t trgt_spd, double kp, double ki, double kd);
     ~dcmotor();
     void Forward(uint8_t fwd_speed);
     void Backward(uint8_t bwd_speed);
